@@ -10,7 +10,13 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{geometry}
+\usepackage{longtable}
+\usepackage{placeins}
+\usepackage{array}
+\usepackage{booktabs}
 \geometry{margin=2.5cm}
+\setlength{\emergencystretch}{3em}
+\raggedbottom
 
 % Nombres en español para índices
 \renewcommand{\contentsname}{Contenido}
@@ -29,6 +35,10 @@
 \newcommand{\universidad}{Pontificia Universidad Javeriana -- Ingeniería de Sistemas}
 \newcommand{\versionDoc}{0.1}
 
+\usepackage{pdflscape}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
 \begin{document}
 
 %---------------------------------------------------------------
@@ -77,20 +87,47 @@ realizados al documento desde su primera versión hasta la versión actual.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{p{1.5cm}p{2cm}p{3cm}p{6cm}p{3cm}}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{p{1cm}p{2cm}p{3.5cm}p{6.5cm}p{3cm}}
         \toprule
         \textbf{Versión} & \textbf{Fecha} & \textbf{Sección modificada} &
         \textbf{Descripción de cambios} & \textbf{Responsable(s)} \\
         \midrule
-        0.1 & \today & Documento completo &
-        Versión inicial del SRS para el prototipo académico del sistema de
-        reventa B2B de tickets con NFTs en Stellar (Soroban). &
-        Juan Diego Arias Durán \\
-        % Ejemplo de futuras filas:
-        % 0.2 & 10/12/2025 & 2, 3 & Ajuste de alcance y refinamiento de RF. & Equipo \\
+        1.0 & 2026-03-11 & Sección de Usuarios e Interfaz &
+        Documentación inicial de tipos de usuarios, acceso y pantallas principales. &
+        Andres Felipe Manosalva \\
+
+        1.1 & 2026-03-11 & Requerimientos funcionales (RF 01-20) &
+        Redacción completa de requerimientos funcionales por módulos, con trazabilidad a casos de uso. &
+        Andres Felipe Manosalva \\
+
+        1.2 & 2026-05-15 & Requerimientos de desempeño &
+        Inclusión de requerimientos estáticos y dinámicos, tiempos de respuesta y criterios de medición. &
+        Andres Felipe Manosalva \\
+
+        1.3 & 2026-05-15 & Restricciones de diseño &
+        Documentación de lenguajes, herramientas, arquitectura, hardware/software, base de datos y blockchain según SAD. &
+        Andres Felipe Manosalva \\
+
+        1.4 & 2026-05-15 & Requerimientos no funcionales &
+        Redacción de atributos de calidad (seguridad, integridad, trazabilidad, rendimiento, disponibilidad) con criterios medibles. &
+        Andres Felipe Manosalva \\
+
+        1.5 & 2026-05-21 & Requerimientos de base de datos &
+        Inclusión de tipos de datos, indexación, claves primarias, consultas y frecuencia de acceso. &
+        Andres Felipe Manosalva \\
+
+        1.6 & 2026-05-21 & Proceso de Ingeniería de Requerimientos &
+        Explicación de técnicas, métodos, trazabilidad y gestión de cambios. &
+        Andres Felipe Manosalva \\
+
+        1.7 & 2026-05-21 & Proceso de Verificación &
+        Definición del proceso de verificación y validación de requerimientos, métodos y criterios de medición. &
+        Andres Felipe Manosalva \\
         \bottomrule
     \end{tabular}
-    \caption{Historial de cambios}
+    \caption{Historial de cambios actualizado}
     \label{tab:historial_cambios}
 \end{table}
 
@@ -161,8 +198,7 @@ comerciales o legales más allá del contexto académico.
 En la Tabla~\ref{tab:acronimos} se definen los términos y acrónimos más
 relevantes utilizados en este SRS. Cualquier término adicional deberá
 incorporarse a esta tabla en versiones posteriores del documento.
-
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{p{3cm}p{10cm}}
         \toprule
@@ -542,6 +578,7 @@ se identifican las siguientes entidades:
           reventa.
 \end{itemize}
 
+
 En una versión posterior de este documento se añadirá un diagrama de modelo de
 dominio y una tabla por cada entidad, con sus atributos, tipo de dato y
 descripción, siguiendo el formato propuesto por la plantilla.
@@ -597,8 +634,2971 @@ siguientes módulos funcionales:
           requerimientos de manejo de cuentas de usuario y control de acceso.
 \end{itemize}
 
+\begin{table}[htbp]
+\centering
+\caption{Siglas de los módulos del sistema}
+\label{tab:siglas_modulos}
+\begin{tabular}{|c|p{8cm}|}
+\hline
+\textbf{Sigla} & \textbf{Módulo} \\ \hline
+\textbf{M1} & Gestión de eventos y tickets \\ \hline
+\textbf{M2} & Emisión NFT \\ \hline
+\textbf{M3} & Mercado secundario \\ \hline
+\textbf{M4} & Configuración y políticas \\ \hline
+\textbf{M5} & Usuarios y autenticación \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Mapeo de requerimientos funcionales con los módulos del sistema}
+\label{tab:mapeo_requerimientos_modulos}
+
+\begin{tabularx}{\textwidth}{|p{1.2cm}|X|c|c|c|c|c|X|}
+\hline
+\textbf{ID} & \textbf{Requerimiento resumido} & \textbf{M1} & \textbf{M2} & \textbf{M3} & \textbf{M4} & \textbf{M5} & \textbf{Observación} \\ \hline
+
+RF-01 & Comprar boletos para un evento & X &  &  &  & X & Involucra compra de ticket y validación del usuario comprador. \\ \hline
+RF-02 & Validar que la compra sea autorizada & X &  &  & X & X & Requiere reglas de autorización, permisos y control del usuario. \\ \hline
+RF-03 & Generar identificador único para cada boleto & X & X &  &  &  & El ticket debe tener un identificador único y puede vincularse al NFT. \\ \hline
+RF-04 & Permitir compra con flujo sencillo & X &  &  &  & X & Se relaciona con experiencia de compra y datos del usuario. \\ \hline
+RF-05 & Autenticar al usuario antes de comprar &  &  &  &  & X & Pertenece directamente al módulo de usuarios y autenticación. \\ \hline
+RF-06 & Registrar propietario inicial y final del boleto & X & X & X &  & X & Permite trazabilidad de propiedad del ticket. \\ \hline
+RF-07 & Listar boleto para reventa &  &  & X & X & X & Pertenece al mercado secundario y debe validar reglas de reventa. \\ \hline
+RF-08 & Verificar que el usuario sea dueño antes de revender &  & X & X &  & X & Requiere validar propiedad del NFT/ticket y usuario autenticado. \\ \hline
+RF-09 & Ejecutar compra en reventa de forma atómica &  & X & X & X & X & Involucra transacción segura, reglas y validación del comprador. \\ \hline
+RF-10 & Evitar que el boleto se venda más de una vez & X & X & X &  &  & Requiere control de estado del ticket y propiedad. \\ \hline
+RF-11 & Ejecutar proceso de burn del boleto vendido &  & X & X &  &  & Está asociado a la lógica NFT al transferir o reemplazar el activo. \\ \hline
+RF-12 & Generar nuevo token para nuevo propietario &  & X & X &  & X & Relacionado con emisión NFT y actualización de propiedad. \\ \hline
+RF-13 & Mantener historial de transferencias & X & X & X &  & X & Permite trazabilidad completa del ticket. \\ \hline
+RF-14 & Consultar estado de boletos adquiridos & X & X &  &  & X & El usuario consulta sus tickets y su estado. \\ \hline
+RF-15 & Verificación rápida del boleto & X & X &  &  &  & Relacionado con validación del ticket/NFT. \\ \hline
+RF-16 & Solo el propietario puede modificar precio de reventa &  &  & X & X & X & Involucra control de permisos y reglas de reventa. \\ \hline
+RF-17 & Integrarse con contratos inteligentes &  & X & X & X &  & Requiere lógica blockchain y parámetros de integración. \\ \hline
+RF-18 & Modificar precio de boleto listado para reventa &  &  & X & X & X & Pertenece al mercado secundario y depende de permisos. \\ \hline
+RF-19 & Consultar disponibilidad de boletos & X &  &  &  &  & Pertenece a la gestión de eventos y tickets. \\ \hline
+RF-20 & Registrar cada transacción realizada & X & X & X &  & X & Se relaciona con trazabilidad de compras, reventas y transferencias. \\ \hline
+
+\end{tabularx}
+\normalsize
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Mapeo de requerimientos no funcionales con los módulos del sistema}
+\label{tab:mapeo_rnf_modulos}
+
+\begin{tabularx}{\textwidth}{|p{1.2cm}|X|c|c|c|c|c|X|}
+\hline
+\textbf{ID} & \textbf{Requerimiento resumido} & \textbf{M1} & \textbf{M2} & \textbf{M3} & \textbf{M4} & \textbf{M5} & \textbf{Observación} \\ \hline
+
+RNF-01 & Procesar la compra de boletos en menos de 5 segundos & X &  & X &  &  & Aplica a compras y reventas. \\ \hline
+RNF-02 & Soportar al menos 100 usuarios concurrentes & X &  & X &  & X & Involucra uso simultáneo del sistema. \\ \hline
+RNF-03 & Tener disponibilidad mínima del 99.5\% mensual & X & X & X & X & X & Afecta a todo el sistema. \\ \hline
+RNF-04 & Bloquear transacciones tras 3 intentos fallidos consecutivos &  & X & X & X & X & Aplica a operaciones sensibles y validación de usuarios. \\ \hline
+RNF-05 & Cifrar comunicaciones mediante TLS 1.2 o superior & X & X & X & X & X & Protege la comunicación en todo el sistema. \\ \hline
+RNF-06 & Soportar al menos 2400 transacciones diarias & X &  & X &  &  & Aplica a compras, ventas y reventas. \\ \hline
+RNF-07 & Completar el proceso de compra en máximo 5 pasos & X &  & X &  & X & Relacionado con facilidad de uso. \\ \hline
+RNF-08 & Permitir aprendizaje del usuario en menos de 15 minutos & X &  & X &  & X & Aplica a la experiencia general del usuario. \\ \hline
+RNF-09 & Mantener una tasa de fallos menor al 0.5\% & X & X & X &  &  & Aplica principalmente a las transacciones. \\ \hline
+RNF-10 & Garantizar atomicidad en el 100\% de las transacciones & X & X & X & X &  & Evita errores en compras, reventas y transferencias. \\ \hline
+RNF-11 & Tener cobertura de pruebas mínima del 70\% & X & X & X & X & X & Aplica al mantenimiento del sistema completo. \\ \hline
+RNF-12 & Ser compatible con navegadores web & X &  & X &  & X & Permite acceso desde distintos navegadores. \\ \hline
+RNF-13 & Integrarse con contratos Soroban mediante API REST &  & X & X & X &  & Relacionado con blockchain e integración externa. \\ \hline
+RNF-14 & Almacenar logs por mínimo 12 meses & X & X & X & X & X & Permite auditoría y seguimiento del sistema. \\ \hline
+RNF-15 & Cerrar sesión tras 30 minutos de inactividad &  &  &  &  & X & Pertenece directamente al control de sesiones. \\ \hline
+RNF-16 & No superar 5 horas de inactividad mensual & X & X & X & X & X & Relacionado con disponibilidad general. \\ \hline
+RNF-17 & Verificar boletos en menos de 5 segundos & X & X &  &  &  & Aplica al proceso de validación de boletos. \\ \hline
+RNF-18 & Soportar varios eventos simultáneos & X &  & X & X &  & Involucra eventos, ventas y reglas de operación. \\ \hline
+RNF-19 & Recuperarse de fallos en menos de 20 minutos & X & X & X & X & X & Aplica a recuperación del sistema completo. \\ \hline
+RNF-20 & Conservar historial de boletos por mínimo 5 años & X & X & X &  & X & Relacionado con trazabilidad de boletos y usuarios. \\ \hline
+
+\end{tabularx}
+
+\normalsize
+\end{table}
+\begingroup
+\tiny
 %===============================================================
 % Aquí después vendría la Sección 3: Requerimientos específicos
 %===============================================================
+\normalsize
+\clearpage
+\section{Requerimientos específicos}
+En esta sección se presenta la especificación detallada de los requerimientos del sistema, tomando como base la distribución definida en la sección 2.7. El objetivo es describir de manera clara, completa y verificable las funcionalidades y restricciones que debe cumplir el sistema.
 
+Los requerimientos se organizan de acuerdo con los módulos principales del sistema: gestión de eventos y tickets, emisión NFT, mercado secundario, configuración y políticas, y usuarios y autenticación. Esta organización facilita la trazabilidad, validación, mantenimiento y futura actualización de cada requerimiento.
+\subsection{Criterios usados para la documentación de los requerimientos}
+Para la documentación de los requerimientos se definió una estructura que permite describir cada necesidad del sistema de forma clara, organizada y verificable. Esta estructura fue seleccionada porque facilita la comunicación entre los interesados, evitando ambigüedades y permitiendo que cada requerimiento pueda ser entendido, implementado y evaluado correctamente.
+
+Los campos definidos, como identificador, tipo, módulo asociado, descripción, razón, prioridad, criterio de aceptación, método de verificación y versión, permiten relacionar cada requerimiento con una parte específica del sistema y con una necesidad concreta del proyecto, esto con el fin de identificar y priorizar los requerimientos del sistema que integra gestión de eventos, emisión NFT, mercado secundario, configuración de políticas y autenticación de usuarios, ya que cada módulo cumple una función diferente dentro de la solución.
+
+Además, esta forma de documentación permite mantener trazabilidad durante el desarrollo, establecer prioridades según la importancia de cada funcionalidad y definir criterios objetivos para comprobar si el sistema cumple con lo esperado. Por esta razón, los requerimientos no se presentan únicamente como una lista general, sino como elementos estructurados que pueden ser revisados, validados y actualizados a lo largo del ciclo de vida del sistema.
+
+A continuación, se presenta la documentación detallada de los requerimientos funcionales del sistema. 
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-01}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-01 & Funcional & CU-01 Comprar boleto \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir comprar boletos para eventos mediante una interfaz clara para el cliente.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento es necesario porque la compra de boletos es una de las funciones principales del sistema.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El usuario debe poder seleccionar un evento, escoger un boleto disponible y completar la compra exitosamente.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-02}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-02 & Funcional & CU-02 Validar solicitud de compra \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe validar que las solicitudes de compra sean realizadas por cuentas autorizadas.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite evitar compras no autorizadas y proteger las operaciones del sistema.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema solo debe permitir la compra cuando el usuario esté autorizado y cumpla las condiciones definidas.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Configuración y políticas / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-03}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-03 & Funcional & CU-03 Generar boleto único \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe generar un identificador único para cada boleto emitido.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este identificador permite diferenciar cada boleto, evitar duplicidades y facilitar su trazabilidad.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{Cada boleto generado debe tener un identificador único que no se repita dentro del sistema.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-04}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-04 & Funcional & CU-04 Realizar compra primaria \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir la compra primaria de boletos mediante un flujo sencillo para el usuario.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento busca facilitar la experiencia de compra y reducir errores durante el proceso.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El usuario debe poder completar la compra primaria siguiendo un flujo claro, comprensible y sin pasos innecesarios.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-05}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-05 & Funcional & CU-05 Autenticar usuario \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe autenticar al usuario antes de realizar compras.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento garantiza que solo usuarios identificados puedan ejecutar operaciones dentro del sistema.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe solicitar autenticación antes de permitir cualquier proceso de compra de boletos.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-06}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-06 & Funcional & CU-06 Registrar propietario del boleto \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe registrar el propietario inicial y el propietario final del boleto.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite mantener trazabilidad sobre la propiedad del boleto durante su ciclo de vida.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe almacenar correctamente la información del propietario inicial y del propietario final después de cada transferencia.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT / Mercado secundario / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-07}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-07 & Funcional & CU-07 Listar boleto para reventa \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir listar un boleto para reventa.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite que el usuario propietario pueda ofrecer su boleto dentro del mercado secundario.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El usuario propietario debe poder publicar un boleto disponible para reventa dentro del sistema.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Mercado secundario / Configuración y políticas / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-08}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-08 & Funcional & CU-08 Verificar propiedad del boleto \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe verificar que el usuario sea dueño del boleto antes de revenderlo.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento evita que usuarios no autorizados publiquen boletos que no les pertenecen.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema solo debe permitir la reventa si el usuario autenticado figura como propietario actual del boleto.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Emisión NFT / Mercado secundario / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-09}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-09 & Funcional & CU-09 Comprar boleto en reventa \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe ejecutar la compra en reventa de manera atómica entre los usuarios.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento garantiza que la transferencia del boleto y la actualización de propiedad se realicen completamente o no se realicen.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{La compra en reventa debe completarse sin estados intermedios inconsistentes entre comprador, vendedor y boleto.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Emisión NFT / Mercado secundario / Configuración y políticas / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-10}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-10 & Funcional & CU-10 Controlar venta única del boleto \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe asegurar que el boleto no se venda más de una vez.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento evita duplicidad de ventas y posibles conflictos de propiedad sobre un mismo boleto.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{Una vez vendido un boleto, el sistema debe cambiar su estado para impedir nuevas ventas simultáneas o posteriores no autorizadas.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT / Mercado secundario \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-11}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-11 & Funcional & CU-11 Quemar boleto vendido \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe ejecutar el proceso de burn del boleto vendido por la entidad durante la reventa.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite invalidar el token anterior y evitar que siga siendo usado después de la transferencia.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{Después de una reventa exitosa, el token anterior debe quedar invalidado dentro del sistema.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Emisión NFT / Mercado secundario \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-12}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-12 & Funcional & CU-12 Generar nuevo token \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe generar un nuevo token para el nuevo propietario de la boleta.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite actualizar la propiedad digital del boleto después de una transferencia o reventa.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{Después de una reventa exitosa, el nuevo propietario debe recibir un token válido asociado al boleto adquirido.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Emisión NFT / Mercado secundario / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-13}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-13 & Funcional & CU-13 Consultar historial de transferencias \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe mantener el historial de transferencias del boleto.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite conocer el recorrido del boleto desde su emisión hasta su propietario actual.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe registrar cada transferencia asociada al boleto con información del propietario anterior, propietario nuevo y fecha de operación.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT / Mercado secundario / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-14}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-14 & Funcional & CU-14 Consultar boletos adquiridos \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir al comprador consultar el estado de sus boletos adquiridos.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite que el usuario tenga control y visibilidad sobre los boletos que ha comprado.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El comprador debe poder visualizar sus boletos y el estado actual de cada uno.} \\ \hline
+Prioridad & Media & Módulo Asociado: Gestión de eventos y tickets / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-15}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-15 & Funcional & CU-15 Verificar boleto \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir la verificación rápida del boleto.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento facilita validar la autenticidad y el estado del boleto durante su uso.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe permitir consultar y validar el boleto de forma rápida mediante su identificador o token asociado.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-16}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-16 & Funcional & CU-16 Validar modificación de reventa \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe validar que únicamente el propietario actual del boleto pueda modificar su estado de reventa.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento protege el control del boleto y evita modificaciones por usuarios no autorizados.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe rechazar cualquier modificación de reventa realizada por un usuario que no sea el propietario actual.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Mercado secundario / Configuración y políticas / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-17}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-17 & Funcional & CU-17 Integrar contratos inteligentes \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe integrarse con contratos inteligentes.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite automatizar operaciones relacionadas con emisión, transferencia y validación de boletos digitales.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe comunicarse correctamente con los contratos inteligentes definidos para las operaciones de boletos NFT.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Emisión NFT / Mercado secundario / Configuración y políticas \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-18}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-18 & Funcional & CU-18 Modificar precio de reventa \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir al propietario del boleto modificar el precio de un boleto listado previamente para reventa.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite que el vendedor ajuste el valor de su boleto dentro del mercado secundario.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El propietario debe poder modificar el precio de reventa siempre que el boleto siga listado y no haya sido vendido.} \\ \hline
+Prioridad & Media & Módulo Asociado: Mercado secundario / Configuración y políticas / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-19}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-19 & Funcional & CU-19 Consultar disponibilidad \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe permitir consultar la disponibilidad de boletos.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite que los usuarios conozcan si existen boletos disponibles antes de iniciar una compra.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{El sistema debe mostrar la cantidad o el estado de disponibilidad de los boletos asociados a cada evento.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.5pt}
+
+\textbf{Tabla. Documentación del requerimiento RF-20}
+
+\vspace{2pt}
+
+\begin{tabularx}{\textwidth}{|p{2.6cm}|X|p{3.4cm}|}
+\hline
+\# Requerimiento & Tipo de Requerimiento & Casos de Uso Asociados \\ \hline
+RF-20 & Funcional & CU-20 Registrar transacción \\ \hline
+Descripción & \multicolumn{2}{X|}{El sistema debe registrar cada transacción realizada.} \\ \hline
+Razón & \multicolumn{2}{X|}{Este requerimiento permite mantener trazabilidad, auditoría y control sobre las operaciones del sistema.} \\ \hline
+Autor & \multicolumn{2}{X|}{Equipo de desarrollo} \\ \hline
+Criterio de medición & \multicolumn{2}{X|}{Cada compra, reventa o transferencia debe quedar registrada con su información básica de operación.} \\ \hline
+Prioridad & Alta & Módulo Asociado: Gestión de eventos y tickets / Emisión NFT / Mercado secundario / Usuarios y autenticación \\ \hline
+Versión & 1.0 & Fecha: 11/03/2026 \\ \hline
+\end{tabularx}
+\end{minipage}
+
+\vspace{0.2cm}
+
+\subsubsection{Interfaces con el Usuario}
+El sistema contará con una interfaz web responsive, diseñada para permitir la comunicación entre la aplicación y los usuarios finales mediante pantallas, formularios, menús, botones, filtros y módulos de visualización. El acceso se realizará desde navegadores modernos en computador o dispositivos móviles, sin necesidad de instalar una aplicación nativa. Para las funciones relacionadas con blockchain, el usuario deberá contar con la extensión Freighter, que permitirá vincular su cuenta con una wallet Web3.
+
+Dento del sistema existiran tres tipos de usuario, El CUSTOMER será el comprador de boletos y podrá registrarse, consultar eventos, comprar entradas, conectar su wallet, asegurar sus boletos en blockchain y participar en la reventa P2P. El ADMIN será el administrador de la plataforma y tendrá acceso a funciones como la creación de eventos, gestión de venues y visualización de contratos desplegados en Soroban. Por último, el usuario STAFF tendrá permisos limitados únicamente al uso del escáner QR para validar boletos en la entrada de los eventos.
+
+La navegación principal del sistema incluirá un catálogo de eventos, donde el usuario podrá buscar y filtrar eventos por categoría o ciudad. Cada evento contará con una pantalla de detalle, en la cual se mostrará la información del evento y se permitirá la selección de boletos generales o con asiento. Luego, el usuario podrá acceder al carrito de compras y al checkout, donde se realizará un pago simulado en moneda fiat.
+
+Después de la compra, el usuario podrá ingresar a la sección Mis Entradas, donde visualizará sus boletos adquiridos, podrá asegurarlos en blockchain o publicarlos en el mercado de reventa P2P. Además, el sistema contará con una pantalla de Reventa P2P, en la cual será posible listar boletos a precio libre o comprar boletos de otros usuarios mediante Freighter. También existirá una sección de Mis Ventas P2P, donde el usuario podrá consultar el historial de ventas, el monto recibido y la wallet del comprador.
+
+Para el administrador, el sistema incluirá un panel Admin, separado de las funciones del cliente, desde el cual se podrán crear eventos, gestionar información de venues y revisar los contratos desplegados en Soroban. Para el personal de puerta, se contará con una interfaz de escáner QR, disponible para usuarios ADMIN y STAFF, que permitirá validar la autenticidad de los boletos y controlar el ingreso al evento.
+
+Las interfaces deberán adaptarse a diferentes resoluciones de pantalla, como 1024x768 para escritorio, 800x600 para pantallas medianas y 600x400 para dispositivos móviles o ventanas pequeñas. La distribución de los elementos deberá ser clara y ordenada, ubicando menús, formularios, tarjetas de eventos, botones de acción y filtros de manera visible. En general, la interfaz buscará facilitar el ingreso de datos, la navegación entre pantallas y la ejecución segura de acciones como comprar boletos, conectar la wallet, revender entradas o validar códigos QR.
+
+\subsubsection{Interfaces con el Hardware}
+El sistema propuesto no requiere una infraestructura física propia, servidores locales ni máquinas virtuales administradas directamente por el equipo de desarrollo. La comunicación entre los usuarios y la aplicación se realizará principalmente a través de dispositivos conectados a internet, como computadores de escritorio, portátiles o dispositivos móviles, utilizando navegadores web modernos.
+
+A nivel de comunicación, los usuarios accederán al sistema mediante protocolos web estándar, como HTTPS/TCP, desde sus navegadores. Esta comunicación permitirá consultar eventos, realizar compras, acceder a entradas digitales, conectarse con la wallet y validar boletos. En el caso del personal de puerta, el dispositivo utilizado deberá contar con cámara o lector compatible para escanear códigos QR, ya que esta será la interfaz principal para validar entradas en los eventos.
+
+Para las funciones Web3, el sistema necesitará comunicarse con la extensión Freighter, instalada en el navegador del usuario. Esta extensión actuará como puente entre la aplicación y la wallet del cliente, permitiendo firmar transacciones relacionadas con operaciones blockchain, como asegurar boletos, comprar en reventa P2P o interactuar con contratos desplegados en Soroban.
+
+El entorno de desarrollo requiere algunos componentes mínimos en los equipos de los desarrolladores. Se necesita Node.js 18 o superior, npm y, en algunos casos, el uso de yarn en Windows por compatibilidad con ciertas librerías. También se requiere Rust y cargo, incluyendo el target wasm32v1-none, para compilar contratos Soroban. Adicionalmente, se necesita Stellar CLI 23.0.0 para construir y desplegar contratos, y la extensión Freighter para realizar pruebas de integración Web3 desde el navegador.
+
+\subsubsection{Interfaces del Software}
+Para la ejecución adecuada del sistema se requieren diferentes productos y servicios de software que permiten el funcionamiento del frontend, backend, base de datos, comunicación con blockchain, autenticación y conexión con wallets. Estas interfaces garantizan que la aplicación pueda operar correctamente desde el navegador, procesar solicitudes del usuario, almacenar información y ejecutar operaciones relacionadas con los boletos digitales y NFTs.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Interfaces con el software}
+\label{tab:interfaces_software}
+
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|X|}
+\hline
+\textbf{Producto de software} & \textbf{Descripción} & \textbf{Propósito de uso} \\ \hline
+
+\textbf{React 18 + TypeScript + Vite} &
+Tecnologías utilizadas para construir el frontend de la aplicación web. React permite crear la interfaz de usuario, TypeScript mejora el control del código y Vite facilita el desarrollo y compilación del proyecto. &
+Permitir que el usuario interactúe con el sistema mediante pantallas como catálogo de eventos, detalle del evento, carrito, Mis Entradas, Reventa P2P y panel administrativo. \\ \hline
+
+\textbf{Tailwind CSS + shadcn/ui} &
+Herramientas para el diseño visual de la interfaz. Tailwind permite aplicar estilos de forma rápida y shadcn/ui proporciona componentes reutilizables basados en Radix. &
+Diseñar una interfaz clara, responsive y consistente para los diferentes tipos de usuario: CUSTOMER, ADMIN y STAFF. \\ \hline
+
+\textbf{TanStack Query + Framer Motion} &
+TanStack Query permite manejar consultas y estados de datos entre frontend y backend. Framer Motion permite incluir animaciones en la interfaz. &
+Mejorar la experiencia del usuario al consultar datos del sistema y hacer que la navegación sea más fluida. \\ \hline
+
+\textbf{Vercel} &
+Plataforma cloud usada para desplegar el frontend SPA y manejar rutas del lado del cliente. También se usa como proxy para algunas rutas específicas. &
+Alojar la aplicación web, redirigir rutas hacia Railway y exponer recursos como \texttt{/api/nft/qr/*}, \texttt{/api/nft/metadata/*} y \texttt{/.well-known/stellar.toml}. \\ \hline
+
+\textbf{Node.js + Express + TypeScript} &
+Tecnologías utilizadas para construir el backend del sistema. Node.js ejecuta el servidor, Express gestiona las rutas API y TypeScript mejora la estructura del código. &
+Procesar solicitudes del frontend, manejar usuarios, eventos, boletos, órdenes, pagos simulados, reventas y comunicación con servicios externos. \\ \hline
+
+\textbf{Prisma ORM} &
+Herramienta que permite conectar el backend con la base de datos mediante un cliente generado. &
+Facilitar las consultas, inserciones y actualizaciones en PostgreSQL de manera estructurada y segura. \\ \hline
+
+\textbf{Railway} &
+Plataforma cloud donde se despliega el backend principal. Permite ejecutar procesos de larga duración. &
+Mantener activo el backend y ejecutar el indexer de Soroban en segundo plano, el cual no puede correr adecuadamente en Vercel serverless. \\ \hline
+
+\textbf{PostgreSQL en Supabase} &
+Base de datos relacional usada por el sistema bajo el esquema \texttt{ticketing}. &
+Almacenar datos de usuarios, eventos, venues, boletos, órdenes, pagos, carrito, inventario de asientos e información sincronizada desde blockchain. \\ \hline
+
+\textbf{pgbouncer / connection pool} &
+Sistema de administración de conexiones a la base de datos. En este caso se usa con límite de conexión igual a 5. &
+Evitar sobrecarga en la base de datos cuando el backend y el indexer realizan operaciones concurrentes. \\ \hline
+
+\textbf{API REST sobre HTTPS} &
+Mecanismo de comunicación entre frontend y backend. Todos los endpoints usan el prefijo \texttt{/api/}. &
+Permitir el intercambio seguro de información entre la interfaz del usuario y el servidor. \\ \hline
+
+\textbf{JWT Bearer Token} &
+Mecanismo de autenticación usado en rutas protegidas mediante el encabezado \texttt{Authorization}. &
+Controlar el acceso a funciones privadas del sistema según el usuario autenticado y su rol. \\ \hline
+
+\textbf{Stellar Testnet + Soroban} &
+Red blockchain utilizada para desplegar contratos inteligentes relacionados con eventos, boletos y NFTs. &
+Gestionar operaciones on-chain como emisión de boletos, propiedad, reventa, transferencia, invalidación y consulta de NFTs. \\ \hline
+
+\textbf{Contratos Soroban} &
+Incluyen \texttt{event\_contract}, \texttt{ticket\_nft\_contract} y \texttt{factory\_contract}. Cada uno cumple funciones específicas dentro del sistema blockchain. &
+Administrar boletos on-chain, crear NFTs tipo SEP-41 por evento y desplegar contratos desde un administrador central. \\ \hline
+
+\textbf{Freighter} &
+Extensión de navegador para Stellar, usada como wallet Web3. &
+Permitir que el usuario conecte su wallet, firme transacciones, asegure boletos en blockchain, compre en reventa y valide propiedad sobre NFTs. \\ \hline
+
+\textbf{Stellar/freighter-api \textasciicircum 6.0.1} &
+Librería usada para integrar Freighter con la aplicación web. &
+Facilitar la conexión entre la cuenta web del usuario y su dirección pública de Stellar. \\ \hline
+
+\textbf{Indexer Soroban} &
+Proceso en segundo plano que escucha eventos on-chain cada 5 segundos. &
+Sincronizar el estado de los boletos entre Stellar Testnet y PostgreSQL. Procesa eventos como boleto creado, listado, comprado, revendidos, redimido o invalidado. \\ \hline
+
+\end{tabularx}
+\normalsize
+\end{table}
+\FloatBarrier
+
+En términos generales, el sistema se apoya en una arquitectura distribuida basada en servicios cloud. El frontend funciona como una aplicación web SPA desplegada en Vercel, mientras que el backend principal se ejecuta en Railway debido a la necesidad de mantener activo el proceso del indexer. La base de datos se gestiona mediante Supabase con PostgreSQL, y la comunicación entre componentes se realiza mediante una API REST segura sobre HTTPS.
+
+La integración con blockchain se realiza a través de la red Stellar Testnet y contratos inteligentes en Soroban. Estos contratos permiten administrar la emisión, propiedad, reventa y control de estado de los boletos digitales. A su vez, la wallet Freighter es necesaria para las operaciones Web3, ya que permite al usuario firmar transacciones y vincular su cuenta con una dirección pública de Stellar.
+
+Por último, es importante aclarar que la wallet no es obligatoria para navegar por la plataforma ni para realizar compras simuladas en fiat. Sin embargo, sí será requerida para asegurar boletos en blockchain, revender entradas o comprar boletos en el mercado P2P. De esta manera, el sistema combina una experiencia Web2 tradicional con funcionalidades Web3 para la gestión segura de boletos digitales.
+
+\subsubsection{Interfaces de comunicación}
+Las interfaces de comunicación del sistema se basan en permitirle al usuario
+acceder a la aplicación desde un navegador web. Desde allí, la aplicación se
+comunica con servicios externos desplegados en la nube. La comunicación
+principal entre el frontend, el backend y los servicios asociados se realizará
+mediante HTTPS sobre TLS, garantizando que el intercambio de información viaje
+cifrado entre el navegador, Vercel, Railway y la base de datos.
+
+El sistema no requiere la implementación de una red local propia tipo LAN, ya
+que funcionará sobre una infraestructura WAN/Internet, utilizando servicios
+cloud. El frontend estará desplegado en Vercel y se comunicará con el backend
+mediante una API REST a través de rutas protegidas bajo el prefijo
+\texttt{/api/}. Estas solicitudes permitirán realizar operaciones como
+autenticación, consulta de eventos, gestión del carrito, checkout,
+visualización de boletos, reventa P2P y validación de entradas.
+
+Se asegura la comunicación entre cliente y servidor mediante el uso de
+\textit{JWT Bearer Token}. Cuando un usuario inicia sesión, el backend genera
+un token con una expiración de siete días. Este token se almacena en el
+navegador y se envía en cada solicitud protegida mediante el encabezado
+\texttt{Authorization: Bearer <token>}. En producción, la variable
+\texttt{JWT\_SECRET} será obligatoria para que el servidor pueda firmar y
+validar los tokens de forma segura.
+
+El control de acceso a las comunicaciones dependerá del rol del usuario. El
+usuario \texttt{CUSTOMER} podrá acceder a funciones relacionadas con
+autenticación, carrito, checkout, órdenes, boletos y transacciones Web3. El
+usuario \texttt{ADMIN} tendrá acceso a las funciones anteriores y,
+adicionalmente, a las rutas administrativas \texttt{/api/admin/*}, como gestión
+de eventos, venues, contratos y escaneo. Por su parte, el usuario
+\texttt{STAFF} tendrá una comunicación limitada únicamente con el endpoint de
+validación QR en puerta, específicamente \texttt{/api/admin/scan}.
+
+La validación de permisos se realizará del lado del servidor. Aunque el JWT
+contiene información del usuario, el sistema no dependerá únicamente de ese
+dato, sino que reconsultará la base de datos para confirmar el rol y los
+permisos antes de ejecutar acciones sensibles. Esto evita que un usuario pueda
+acceder a funciones que no le corresponden mediante la manipulación del token o
+de la interfaz.
+
+En cuanto a la seguridad de la información transmitida, el sistema protegerá
+datos sensibles mediante variables de entorno y filtros en las respuestas.
+Elementos como \texttt{ORGANIZER\_SECRET}, \texttt{DATABASE\_URL} y
+\texttt{JWT\_SECRET} no serán expuestos en respuestas ni en logs. Además, el
+\texttt{password\_hash} nunca será incluido en los DTOs enviados al cliente, y
+la \texttt{wallet\_address} de cada usuario solo será visible para el propio
+usuario autenticado.
+
+El sistema también conservará registros relacionados con la comunicación y
+trazabilidad de operaciones. Por ejemplo, los pagos almacenarán el
+\textit{tx hash} de blockchain en \texttt{payments.provider\_reference}, los
+boletos mantendrán una relación única entre \texttt{contract\_address},
+\texttt{ticket\_root\_id} y \texttt{version}, y el indexer conservará el
+último ledger procesado en \texttt{indexer\_state}. Además, el historial de
+órdenes y pagos quedará registrado en la base de datos. Los logs operativos se
+manejarán mediante la salida estándar de Railway y Vercel, sin un sistema
+externo de logging estructurado.
+
+Finalmente, la comunicación también contempla controles adicionales para evitar
+inconsistencias o accesos indebidos. El código QR del boleto incluirá la versión
+del ticket, de manera que, si un boleto fue revendido, un QR antiguo será
+rechazado con un error 409. Asimismo, las operaciones sobre elementos del
+carrito validarán el \texttt{user\_id}, evitando que un usuario pueda modificar
+o eliminar elementos pertenecientes a otra cuenta. En las operaciones
+relacionadas con contratos Soroban, los cambios de estado requerirán
+autenticación mediante \texttt{require\_auth()}, reforzando la seguridad de las
+transacciones Web3.
+
+\subsection{Características del Producto de Software}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchocelda}
+\setlength{\anchocelda}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-01 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchocelda}|}{CU-01 Crear evento y desplegar contrato} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchocelda}|}{Admin Plataforma} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchocelda}|}{El sistema debe permitir que el administrador cree un evento y despliegue el contrato correspondiente en Soroban para la gestión de boletos.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchocelda}|}{Título del evento, fecha, venue, capacidad, imagen, categoría, ciudad y datos requeridos para el contrato.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchocelda}|}{El sistema registra el evento en la base de datos y despliega los contratos necesarios en Stellar Testnet mediante Soroban.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchocelda}|}{Evento creado, contrato desplegado y dirección del contrato almacenada en el sistema.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchocelda}|}{Es necesario que cada evento tenga una configuración propia para administrar boletos, compras, reventas e invalidaciones.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchocelda}|}{El evento aparece en el catálogo y el contrato queda registrado correctamente en la base de datos.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Gestión de eventos y contratos \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-01}
+\label{tab:documentacion_requerimientos_rf01}
+\normalsize
+\end{table}
+%%Modulo 2 Gestion de eventos y tickets%%
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdos}
+\setlength{\anchoceldaRFdos}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-02 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{CU-02 Compra primaria de boleto} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{El sistema debe permitir que el usuario compre boletos disponibles directamente desde la plataforma.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{Evento seleccionado, tipo de boleto, cantidad, información del carrito y datos del checkout.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{El sistema valida la disponibilidad, procesa el checkout con pago simulado, genera la orden y asigna el boleto al usuario.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{Orden de compra creada, boleto asignado al usuario y entrada disponible en la sección Mis Entradas.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{Esta es la funcionalidad principal para que los usuarios puedan adquirir entradas de forma inicial.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdos}|}{Al finalizar la compra, el usuario puede visualizar el boleto adquirido en su cuenta.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Compra primaria de boletos \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-02}
+\label{tab:documentacion_requerimientos_rf02}
+\normalsize
+\end{table}
+
+%% Modulo P2P %%
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFtres}
+\setlength{\anchoceldaRFtres}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-03 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{El sistema debe permitir que un usuario publique un boleto propio en el mercado de reventa P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{Boleto seleccionado, precio de reventa y wallet del usuario.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{El sistema verifica que el boleto pertenezca al usuario, que no esté usado ni invalidado, y lo marca como disponible para reventa.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{Boleto publicado en el mercado P2P con precio visible para otros usuarios.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{Permite que los usuarios puedan revender boletos que ya no utilizarán, conservando la trazabilidad de propiedad.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFtres}|}{El boleto aparece en la sección de Reventa P2P y su estado cambia a ``en venta''.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-03}
+\label{tab:documentacion_requerimientos_rf03}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFcuatro}
+\setlength{\anchoceldaRFcuatro}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-04 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{El sistema debe permitir que un usuario compre un boleto publicado por otro usuario en el mercado de reventa P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{Boleto en reventa, wallet del comprador y firma de transacción mediante Freighter.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{El sistema ejecuta la compra en blockchain, actualiza la propiedad del boleto, registra la transacción y sincroniza el nuevo estado en la base de datos.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{Boleto transferido al nuevo comprador, versión anterior reemplazada y operación registrada.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{Garantiza que la reventa se realice de forma segura, trazable y sin duplicar la propiedad del boleto.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFcuatro}|}{Después de la compra, el boleto aparece en Mis Entradas del comprador y deja de estar disponible en el mercado P2P.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-04}
+\label{tab:documentacion_requerimientos_rf04}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFcinco}
+\setlength{\anchoceldaRFcinco}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-05 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{CU-04 Compra en reventa atómica --- incluye Distribuir comisiones} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{Sistema / Contrato Soroban} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{El sistema debe distribuir las comisiones generadas durante una compra en reventa P2P según las reglas definidas en el contrato.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{Precio de reventa, datos del comprador, vendedor y parámetros de comisión.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{El contrato calcula y distribuye los montos correspondientes entre las partes involucradas.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{Comisión distribuida y transacción registrada en blockchain y base de datos.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{Permite controlar los ingresos derivados de la reventa y mantener reglas transparentes dentro del mercado secundario.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFcinco}|}{La operación de reventa registra correctamente el monto, la comisión y las wallets involucradas.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P / Contrato Soroban \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-05}
+\label{tab:documentacion_requerimientos_rf05}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFseis}
+\setlength{\anchoceldaRFseis}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-06 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{CU-04 Compra en reventa atómica --- incluye Burn/Remint versión} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{Sistema / Contrato Soroban} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{El sistema debe invalidar la versión anterior del boleto y generar una nueva versión cuando se complete una compra en reventa.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{Identificador del boleto, versión actual, wallet del vendedor y wallet del comprador.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{El contrato quema o invalida la versión anterior del boleto y genera una nueva versión asociada al nuevo propietario.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{Nueva versión del boleto, nuevo propietario registrado y QR anterior invalidado.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{Evita el uso de boletos antiguos después de una reventa y garantiza que solo el comprador final tenga un boleto válido.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFseis}|}{El QR antiguo es rechazado y el nuevo boleto queda asociado a la wallet del comprador.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P / Blockchain y NFTs \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-06}
+\label{tab:documentacion_requerimientos_rf06}
+\normalsize
+\end{table}
+
+%%Módulo 4. Verificación
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFsiete}
+\setlength{\anchoceldaRFsiete}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-07 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{CU-05 Verificar y redimir boleto en puerta} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{Verificador / Personal Evento} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{El sistema debe permitir que el personal del evento escanee el código QR de un boleto para verificar su validez y redimirlo en la entrada.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{Código QR del boleto.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{El sistema consulta la información del boleto, valida que pertenezca a la versión vigente y verifica que no esté usado, invalidado o vencido por reventa.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{Resultado de validación: boleto aceptado o rechazado. Si es aceptado, queda marcado como usado.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{Permite controlar el ingreso al evento y evitar el uso duplicado o fraudulento de entradas.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFsiete}|}{Un boleto válido permite el ingreso una sola vez; un boleto usado, invalidado o con QR antiguo es rechazado.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Validación de boletos \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-07}
+\label{tab:documentacion_requerimientos_rf07}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFocho}
+\setlength{\anchoceldaRFocho}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-08 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{CU-06 Invalidar boleto} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{Organizador / Ticketera} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{El sistema debe permitir que el organizador invalide un boleto cuando sea necesario, por ejemplo, por fraude, error, cancelación o uso indebido.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{Identificador del boleto y motivo de invalidación.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{El sistema cambia el estado del boleto a invalidado y bloquea su uso en procesos de reventa, transferencia o validación en puerta.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{Boleto invalidado y registrado como no válido dentro del sistema.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{Es necesario que la ticketera pueda controlar situaciones excepcionales y proteger la autenticidad del evento.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFocho}|}{Un boleto invalidado no puede ser escaneado, revendido ni utilizado para ingresar al evento.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Administración y control de boletos \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-08}
+\label{tab:documentacion_requerimientos_rf08}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFnueve}
+\setlength{\anchoceldaRFnueve}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-09 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{El sistema debe permitir que el usuario conecte su wallet Freighter a su cuenta.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{Dirección pública de la wallet y autorización desde Freighter.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{El sistema vincula la cuenta Web2 del usuario con su dirección pública Stellar.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{Cuenta vinculada a una wallet.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{La wallet es necesaria para realizar operaciones Web3 como asegurar, revender o comprar boletos en reventa.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFnueve}|}{La wallet queda registrada y asociada únicamente al usuario autenticado.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Wallets \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-09}
+\label{tab:documentacion_requerimientos_rf09}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdiez}
+\setlength{\anchoceldaRFdiez}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-10 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{El sistema debe permitir asegurar un boleto en blockchain antes de ser revendido.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{Boleto seleccionado y wallet del usuario.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{El sistema registra el boleto en blockchain mediante contratos Soroban y emite su representación NFT.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{Boleto asegurado en blockchain y asociado a la wallet del usuario.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{Es necesario garantizar autenticidad y trazabilidad antes de permitir la reventa.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdiez}|}{El boleto queda asociado a un contrato, token NFT y propietario.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Blockchain y NFTs \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-10}
+\label{tab:documentacion_requerimientos_rf10}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFonce}
+\setlength{\anchoceldaRFonce}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-11 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{El sistema debe permitir publicar un boleto propio en el mercado de reventa P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{Boleto seleccionado, precio de reventa y wallet del propietario.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{El sistema verifica la propiedad del boleto, valida que no esté usado ni invalidado y lo marca como disponible para reventa.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{Boleto listado en el mercado P2P.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{Permite que un usuario revenda un boleto que ya no utilizará.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFonce}|}{El boleto aparece en el módulo de Reventa P2P con estado ``en venta''.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-11}
+\label{tab:documentacion_requerimientos_rf11}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdoce}
+\setlength{\anchoceldaRFdoce}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-12 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{El sistema debe permitir cancelar la publicación de un boleto listado en reventa.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{Boleto listado y solicitud de cancelación del propietario.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{El sistema verifica que el usuario sea propietario del boleto y retira el boleto del mercado P2P.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{Boleto eliminado del mercado de reventa.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{El usuario debe poder retirar su boleto si decide no venderlo.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdoce}|}{El boleto deja de aparecer en Reventa P2P y cambia su estado a no disponible para venta.} \\ \hline
+
+\textbf{Prioridad} & Media & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-12}
+\label{tab:documentacion_requerimientos_rf12}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFtrece}
+\setlength{\anchoceldaRFtrece}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-13 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{El sistema debe permitir consultar los boletos disponibles en el mercado de reventa P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{Solicitud de consulta del mercado P2P.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{El sistema obtiene los boletos marcados como disponibles para reventa.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{Lista de boletos en reventa con evento, precio y disponibilidad.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{El comprador necesita visualizar las opciones disponibles antes de comprar.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFtrece}|}{Solo se muestran boletos activos y disponibles para reventa.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-13}
+\label{tab:documentacion_requerimientos_rf13}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFcatorce}
+\setlength{\anchoceldaRFcatorce}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-14 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{El sistema debe permitir comprar un boleto publicado por otro usuario en el mercado de reventa P2P mediante Freighter.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{Boleto en reventa, wallet del comprador y firma de transacción.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{El sistema ejecuta la compra en blockchain, actualiza la propiedad del boleto y registra la operación.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{Boleto transferido al comprador y operación registrada.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{Permite realizar compras entre usuarios de forma segura y trazable.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFcatorce}|}{El boleto aparece en Mis Entradas del comprador y desaparece del mercado P2P.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-14}
+\label{tab:documentacion_requerimientos_rf14}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFquince}
+\setlength{\anchoceldaRFquince}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-15 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{CU-04 Compra en reventa atómica incluye Burn/Remint versión} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{Sistema / Contrato Soroban} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{El sistema debe invalidar la versión anterior del boleto y generar una nueva versión después de una reventa exitosa.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{Identificador del boleto, versión actual, wallet del vendedor y wallet del comprador.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{El contrato quema o invalida la versión anterior y genera una nueva versión asociada al nuevo propietario.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{Nueva versión del boleto y QR anterior invalidado.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{Evita que el vendedor conserve un boleto válido después de la reventa.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFquince}|}{El QR antiguo es rechazado y el nuevo boleto pertenece al comprador.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Blockchain y NFTs \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-15}
+\label{tab:documentacion_requerimientos_rf15}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdieciseis}
+\setlength{\anchoceldaRFdieciseis}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-16 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{CU-04 Compra en reventa atómica incluye Distribuir comisiones} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{Sistema / Contrato Soroban} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{El sistema debe distribuir las comisiones generadas durante una compra en reventa P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{Precio de reventa, wallet del comprador, wallet del vendedor y reglas de comisión.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{El contrato calcula los montos correspondientes y ejecuta la distribución según las reglas definidas.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{Pago distribuido y comisión registrada.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{Permite controlar la monetización de la reventa y mantener reglas transparentes.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdieciseis}|}{La operación registra monto, comisión y wallets involucradas.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Reventa P2P / Contrato Soroban \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-16}
+\label{tab:documentacion_requerimientos_rf16}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdiecisiete}
+\setlength{\anchoceldaRFdiecisiete}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-17 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{Usuario} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{El sistema debe permitir consultar el historial de boletos vendidos en la sección Mis Ventas P2P.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{Solicitud del usuario autenticado.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{El sistema consulta las ventas asociadas al usuario vendedor.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{Historial de ventas con monto, boleto vendido y wallet del comprador.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{El vendedor necesita llevar trazabilidad de sus operaciones de reventa.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdiecisiete}|}{El usuario visualiza únicamente sus ventas realizadas.} \\ \hline
+
+\textbf{Prioridad} & Media & \textbf{Módulo Asociado} & Mis Ventas P2P \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-17}
+\label{tab:documentacion_requerimientos_rf17}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdieciocho}
+\setlength{\anchoceldaRFdieciocho}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-18 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{CU-05 Verificar y redimir boleto en puerta} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{Verificador / Personal Evento} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{El sistema debe generar un código QR único para cada boleto válido.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{Información del boleto, identificador y versión.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{El sistema genera un QR asociado al boleto y a su versión vigente.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{Código QR disponible para validación en puerta.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{El QR permite verificar la autenticidad del boleto durante el ingreso al evento.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdieciocho}|}{Cada boleto válido cuenta con un QR único y legible.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Validación QR \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-18}
+\label{tab:documentacion_requerimientos_rf18}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFdiecinueve}
+\setlength{\anchoceldaRFdiecinueve}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-19 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{CU-05 Verificar y redimir boleto en puerta} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{Verificador / Personal Evento} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{El sistema debe permitir escanear el código QR de un boleto en la entrada del evento.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{Código QR presentado por el usuario.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{El sistema lee el QR, consulta el boleto asociado y valida su estado.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{Resultado de validación del boleto.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{El personal del evento necesita verificar rápidamente la entrada del asistente.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFdiecinueve}|}{El QR puede ser leído correctamente desde la interfaz de escáner.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Escáner QR \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-19}
+\label{tab:documentacion_requerimientos_rf19}
+\normalsize
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\newlength{\anchoceldaRFveinte}
+\setlength{\anchoceldaRFveinte}{\dimexpr\textwidth-2.7cm-8\tabcolsep-5\arrayrulewidth\relax}
+
+\begin{tabularx}{\textwidth}{|p{2.7cm}|X|p{2.8cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RF-20 & \textbf{Tipo de Requerimiento} & Funcional \\ \hline
+
+\textbf{Caso de Uso Asociado} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{CU-05 Verificar y redimir boleto en puerta} \\ \hline
+
+\textbf{Actor Principal} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{Verificador / Personal Evento} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{El sistema debe rechazar boletos usados, invalidados o con versiones vencidas por reventa.} \\ \hline
+
+\textbf{Entradas} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{Código QR y estado del boleto.} \\ \hline
+
+\textbf{Proceso} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{El sistema compara la versión del QR con la versión vigente y revisa si el boleto ya fue usado o invalidado.} \\ \hline
+
+\textbf{Salidas} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{Boleto aceptado o rechazado.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{Evita fraudes, duplicados y uso de boletos antiguos.} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\anchoceldaRFveinte}|}{Un QR antiguo, usado o invalidado es rechazado por el sistema.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Validación QR \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos RF-20}
+\label{tab:documentacion_requerimientos_rf20}
+\normalsize
+\end{table}
+Los requerimientos funcionales anteriores se encuentran relacionados directamente con los casos de uso significativos del sistema Stellar Tickets, esta trazabilidad permite identificar qué funcionalidad cumple cada caso de uso, qué actor interviene, qué información ingresa al sistema, qué proceso se ejecuta y qué resultado se espera y también facilita el mantenimiento del sistema, ya que cualquier cambio en un caso de uso puede reflejarse en los requerimientos funcionales asociados.
+
+\subsubsection{Funcionalidad 1: Gestión de eventos y contratos}
+Esta funcionalidad reúne los elementos necesarios para que el administrador pueda crear eventos dentro de la plataforma y asociarlos con contratos desplegados en Soroban. Aquí se documentan los datos principales del evento y la información técnica del contrato que permite administrar boletos en blockchain.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.5cm}|}
+\hline
+\textbf{ID} & MD-01 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Evento y Contrato Soroban} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-01 Crear evento, RF-02 Desplegar contrato Soroban} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-01 Crear evento y desplegar contrato} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa la información base de un evento publicado en la plataforma y su relación con un contrato inteligente desplegado en Stellar Testnet. Este elemento permite que cada evento tenga una estructura propia para manejar boletos, ventas, reventas e invalidaciones.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+event\_id & Identificador único del evento dentro del sistema. & UUID / VARCHAR(36) \\ \hline
+title & Nombre visible del evento para los usuarios. & VARCHAR(255) \\ \hline
+event\_date & Fecha y hora programada del evento. & TIMESTAMP WITH TIME ZONE \\ \hline
+venue\_id & Identificador del lugar donde se realizará el evento. & UUID / FOREIGN KEY \\ \hline
+capacity & Número máximo de asistentes permitidos para el evento. & INTEGER \\ \hline
+image\_url & Ruta o URL de la imagen promocional del evento. & TEXT / URL \\ \hline
+category & Categoría del evento, por ejemplo concierto, deporte o teatro. & ENUM / VARCHAR(50) \\ \hline
+city & Ciudad donde se realizará el evento. & VARCHAR(100) \\ \hline
+contract\_address & Dirección del contrato desplegado en Soroban asociado al evento. & Stellar Contract Address / VARCHAR(100) \\ \hline
+contract\_status & Estado del contrato asociado al evento. & ENUM \\ \hline
+created\_by & Usuario administrador que creó el evento. & UUID / FOREIGN KEY \\ \hline
+created\_at & Fecha de creación del registro. & TIMESTAMP WITH TIME ZONE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Permitir que la plataforma registre eventos administrables y los conecte con contratos blockchain para soportar la emisión, venta, reventa e invalidación de boletos digitales.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_evento_contrato}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 2: Compra primaria de boletos}
+Esta funcionalidad describe los elementos que intervienen cuando un usuario consulta eventos, selecciona boletos, administra su carrito y realiza una compra primaria. Su propósito es permitir que el cliente adquiera entradas directamente desde la plataforma antes de cualquier proceso de reventa.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-02 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Catálogo, Carrito, Orden de Compra y Boleto} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-03 Consultar catálogo, RF-04 Filtrar eventos, RF-05 Seleccionar boletos, RF-06 Gestionar carrito, RF-07 Checkout, RF-08 Visualizar boletos} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-02 Compra primaria de boleto} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa el conjunto de datos que permite al usuario buscar eventos, seleccionar entradas, agregarlas al carrito y finalizar una compra mediante pago simulado. También incluye la visualización posterior de los boletos adquiridos en la sección Mis Entradas.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+catalog\_filter & Criterios usados para filtrar eventos por ciudad o categoría. & JSONB / OBJECT \\ \hline
+cart\_id & Identificador único del carrito del usuario. & UUID \\ \hline
+user\_id & Identificador del usuario dueño del carrito o de la orden. & UUID / FOREIGN KEY \\ \hline
+event\_id & Evento al que pertenece el boleto seleccionado. & UUID / FOREIGN KEY \\ \hline
+ticket\_type & Tipo de boleto seleccionado, general o con asiento. & ENUM('GA','SEATED') \\ \hline
+seat\_id & Identificador del asiento seleccionado, cuando aplica. & UUID / NULLABLE FOREIGN KEY \\ \hline
+quantity & Cantidad de boletos seleccionados. & INTEGER \\ \hline
+unit\_price & Precio unitario del boleto. & DECIMAL(12,2) \\ \hline
+order\_id & Identificador de la orden generada después del checkout. & UUID \\ \hline
+payment\_status & Estado del pago simulado. & ENUM\\ \hline
+ticket\_status & Estado inicial del boleto adquirido. & ENUM \\ \hline
+created\_at & Fecha en que se generó el carrito, orden o boleto. & TIMESTAMP WITH TIME ZONE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Facilitar el proceso completo de compra primaria, desde la consulta del evento hasta la generación de boletos asociados al usuario autenticado.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_catalogo_carrito_orden_boleto}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 3: Wallets e integración Web3}
+Esta funcionalidad contempla la conexión entre la cuenta tradicional del usuario y su wallet Freighter. Es importante porque algunas operaciones del sistema, especialmente las relacionadas con blockchain, requieren identificar la dirección pública del usuario y permitir la firma de transacciones.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-03 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Usuario Web3 y Wallet Freighter} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-09 Conectar wallet Freighter, RF-10 Asegurar boleto en blockchain} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-03 Listar boleto para reventa} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa la relación entre una cuenta de usuario Web2 y una dirección pública de Stellar. Esta información permite habilitar funcionalidades como asegurar boletos en blockchain, consultar propiedad y firmar operaciones de reventa mediante Freighter.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+user\_id & Identificador del usuario registrado en la plataforma. & UUID / FOREIGN KEY \\ \hline
+name & Nombre del usuario. & VARCHAR(150) \\ \hline
+email & Correo electrónico usado para autenticación. & VARCHAR(255) / UNIQUE \\ \hline
+password\_hash & Contraseña cifrada del usuario. & VARCHAR(255) \\ \hline
+role & Rol asignado al usuario dentro del sistema. & ENUM\\ \hline
+wallet\_address & Dirección pública Stellar vinculada a la cuenta. & Stellar Public Key / VARCHAR(56) \\ \hline
+wallet\_provider & Proveedor de wallet usado por el usuario. & ENUM('Freighter') \\ \hline
+wallet\_linked\_at & Fecha en la que la wallet fue vinculada. & TIMESTAMP WITH TIME ZONE \\ \hline
+is\_wallet\_verified & Indica si la wallet fue conectada correctamente. & BOOLEAN \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Asociar de manera controlada una cuenta de usuario con una wallet Web3, permitiendo ejecutar operaciones blockchain únicamente cuando el usuario tenga una dirección válida vinculada.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_usuario_web3_wallet}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 4: Blockchain y NFTs}
+Esta funcionalidad agrupa los elementos que permiten representar boletos digitales como activos verificables en blockchain. Incluye la información del NFT, la versión del boleto y los datos necesarios para conservar trazabilidad entre la base de datos y Stellar Testnet.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-04 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Boleto Blockchain y NFT} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-10 Asegurar boleto en blockchain, RF-15 Burn/Remint de versión} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-03 Listar boleto para reventa, CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa el boleto cuando ya ha sido asegurado en blockchain y cuenta con una versión NFT asociada. Este elemento permite mantener la propiedad, el estado y la trazabilidad del boleto durante procesos de compra, reventa o invalidación.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+ticket\_id & Identificador interno del boleto en la base de datos. & UUID \\ \hline
+contract\_address & Dirección del contrato Soroban asociado al evento. & Stellar Contract Address / VARCHAR(100) \\ \hline
+ticket\_root\_id & Identificador raíz del boleto, usado para conservar trazabilidad entre versiones. & VARCHAR(100) \\ \hline
+version & Número de versión del boleto. & INTEGER \\ \hline
+nft\_token\_id & Identificador del NFT asociado al boleto. & VARCHAR(100) \\ \hline
+token\_uri & URL de metadata del NFT. & TEXT / URL \\ \hline
+owner\_wallet & Wallet propietaria actual del boleto. & Stellar Public Key / VARCHAR(56) \\ \hline
+asset\_code & Código del activo relacionado con el boleto. & VARCHAR(20) \\ \hline
+blockchain\_status & Estado del boleto en blockchain. & ENUM \\ \hline
+tx\_hash & Hash de la transacción blockchain relacionada. & VARCHAR(128) \\ \hline
+synced\_at & Fecha de última sincronización con el indexer. & TIMESTAMP WITH TIME ZONE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Garantizar que cada boleto asegurado tenga una representación digital única, verificable y trazable en blockchain, evitando duplicidades o usos no autorizados.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_boleto_blockchain_nft}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 5: Reventa P2P}
+Esta funcionalidad permite que los usuarios publiquen boletos propios en un mercado secundario y que otros usuarios puedan comprarlos mediante Freighter. También contempla la actualización de propiedad, el historial de ventas y la distribución de comisiones asociadas a la operación.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-05 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Publicación de Reventa y Transacción P2P} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-11 Publicar boleto en reventa, RF-12 Cancelar publicación, RF-13 Consultar boletos en reventa, RF-14 Comprar boleto en reventa, RF-16 Distribuir comisiones, RF-17 Historial de ventas P2P} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-03 Listar boleto para reventa, CU-04 Compra en reventa atómica} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa el proceso mediante el cual un boleto pasa del propietario original a un nuevo comprador dentro del mercado P2P. Este elemento conserva información del precio, vendedor, comprador, comisión, estado de la publicación y resultado de la transferencia.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+resale\_id & Identificador único de la publicación de reventa. & UUID \\ \hline
+ticket\_id & Boleto que será ofrecido en el mercado P2P. & UUID / FOREIGN KEY \\ \hline
+seller\_user\_id & Usuario que publica el boleto para reventa. & UUID / FOREIGN KEY \\ \hline
+seller\_wallet & Wallet del vendedor del boleto. & Stellar Public Key / VARCHAR(56) \\ \hline
+buyer\_user\_id & Usuario que compra el boleto, cuando la operación se concreta. & UUID / NULLABLE FOREIGN KEY \\ \hline
+buyer\_wallet & Wallet del comprador del boleto. & Stellar Public Key / VARCHAR(56) / NULLABLE \\ \hline
+resale\_price & Precio definido por el vendedor para la reventa. & DECIMAL(18,7) \\ \hline
+commission\_amount & Valor de la comisión generada por la operación. & DECIMAL(18,7) \\ \hline
+resale\_status & Estado de la publicación o transacción. & ENUM \\ \hline
+signed\_xdr & Transacción firmada por el comprador mediante Freighter. & TEXT / XDR String \\ \hline
+tx\_hash & Hash de la transacción de compra en reventa. & VARCHAR(128) \\ \hline
+sold\_at & Fecha en la que se concreta la venta. & TIMESTAMP WITH TIME ZONE / NULLABLE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Permitir un mercado secundario controlado, donde los boletos puedan revenderse de forma trazable, actualizando la propiedad y evitando que versiones anteriores sigan siendo válidas.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_reventa_transaccion_p2p}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 6: Validación QR}
+Esta funcionalidad se enfoca en el proceso de ingreso al evento. Permite que el personal autorizado escanee el código QR del boleto, verifique su estado y lo marque como usado si cumple con las condiciones de validez.
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{4.2cm}|}
+\hline
+\textbf{ID} & MD-06 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Código QR y Validación de Boleto} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-18 Generar QR, RF-19 Escanear QR, RF-20 Rechazar boletos usados, invalidados o vencidos} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-05 Verificar y redimir boleto en puerta} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa la información utilizada para validar un boleto en la entrada del evento. El QR contiene datos del boleto y su versión vigente, permitiendo detectar si el boleto ya fue usado, invalidado o reemplazado después de una reventa.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+qr\_id & Identificador del código QR generado para el boleto. & UUID \\ \hline
+ticket\_id & Boleto asociado al código QR. & UUID / FOREIGN KEY \\ \hline
+ticket\_root\_id & Identificador raíz del boleto. & VARCHAR(100) \\ \hline
+version & Versión del boleto incluida en el QR. & INTEGER \\ \hline
+qr\_payload & Información codificada dentro del QR. & JSONB / QRPayload \\ \hline
+qr\_url & URL usada para consultar o validar el QR. & TEXT / URL \\ \hline
+scanned\_by & Usuario STAFF o ADMIN que realiza el escaneo. & UUID / FOREIGN KEY \\ \hline
+scan\_status & Resultado del proceso de validación. & ENUM \\ \hline
+scanned\_at & Fecha y hora del escaneo. & TIMESTAMP WITH TIME ZONE \\ \hline
+http\_response\_code & Código de respuesta generado por el sistema durante la validación. & INTEGER \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Controlar el ingreso al evento mediante una validación rápida y segura, garantizando que solo boletos vigentes, no usados y no invalidados puedan ser redimidos en puerta.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_qr_validacion_boleto}
+\normalsize
+\end{table}
+\subsubsection{Funcionalidad 7: Administración y control de boletos}
+Esta funcionalidad permite que actores autorizados, como la ticketera u organizador, puedan tomar acciones sobre boletos específicos en casos especiales. Se usa cuando un boleto debe ser bloqueado por fraude, error, cancelación o alguna situación que comprometa la validez de la entrada.
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-07 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Invalidación de Boleto} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-22 Invalidar boleto} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{CU-06 Invalidar boleto} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Representa el proceso mediante el cual un boleto deja de ser válido dentro del sistema. La invalidación impide que el boleto pueda ser revendido, transferido o validado en puerta, manteniendo un registro del motivo y del actor que realizó la acción.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+invalidation\_id & Identificador único del registro de invalidación. & UUID \\ \hline
+ticket\_id & Boleto que será invalidado. & UUID / FOREIGN KEY \\ \hline
+ticket\_root\_id & Identificador raíz del boleto afectado. & VARCHAR(100) \\ \hline
+invalidated\_by & Usuario organizador o administrador que ejecuta la acción. & UUID / FOREIGN KEY \\ \hline
+invalidation\_reason & Motivo por el cual se invalida el boleto. & TEXT \\ \hline
+previous\_status & Estado del boleto antes de ser invalidado. & ENUM\\ \hline
+new\_status & Nuevo estado asignado al boleto. & ENUM('invalidated') \\ \hline
+invalidated\_at & Fecha y hora de la invalidación. & TIMESTAMP WITH TIME ZONE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Permitir que la plataforma mantenga control sobre situaciones excepcionales, protegiendo la autenticidad del sistema y evitando el uso indebido de boletos comprometidos.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_invalidacion_boleto}
+\normalsize
+\end{table}
+
+\subsubsection{Funcionalidad 8: Cruce de funcionalidades}
+En esta sección se incluyen elementos que no pertenecen a una sola funcionalidad, pero que son necesarios para el correcto funcionamiento de varias partes del sistema. Estos elementos permiten mantener trazabilidad, control de acceso, sincronización con blockchain y coherencia entre los módulos.
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{3.8cm}|}
+\hline
+\textbf{ID} & MD-08 & \\ \hline
+
+\textbf{Elemento del Dominio} & 
+\multicolumn{2}{X|}{Autenticación, Roles e Indexer} \\ \hline
+
+\textbf{Requerimientos asociados} & 
+\multicolumn{2}{X|}{RF-23 Registro de usuario, RF-24 Inicio de sesión, RF-25 Control de roles, además de soporte transversal para RF-10, RF-14, RF-15, RF-16 y RF-20} \\ \hline
+
+\textbf{Casos de uso asociados} & 
+\multicolumn{2}{X|}{Transversal a CU-01, CU-02, CU-03, CU-04, CU-05 y CU-06} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{2}{X|}{Agrupa los elementos que permiten que el sistema controle el acceso de los usuarios, mantenga sesiones activas y sincronice información entre blockchain y base de datos. Aunque no representan una funcionalidad visible única, son necesarios para garantizar que las acciones se ejecuten con permisos correctos y datos actualizados.} \\ \hline
+
+\multicolumn{3}{|c|}{\textbf{Atributos}} \\ \hline
+
+\textbf{Nombre} & \textbf{Descripción} & \textbf{Tipo de Dato} \\ \hline
+
+auth\_token & Token usado para mantener la sesión del usuario autenticado. & JWT String \\ \hline
+token\_expiration & Tiempo de expiración del token de sesión. & INTERVAL / TIMESTAMP \\ \hline
+role & Rol del usuario dentro del sistema. & ENUM \\ \hline
+permission\_scope & Alcance de permisos disponibles para el usuario. & JSONB / ARRAY \\ \hline
+indexer\_state\_id & Identificador del estado del indexer. & UUID \\ \hline
+last\_processed\_ledger & Último ledger procesado por el indexer. & BIGINT \\ \hline
+sync\_status & Estado de sincronización entre blockchain y base de datos. & ENUM \\ \hline
+provider\_reference & Referencia externa de una transacción o pago. & VARCHAR(128) \\ \hline
+created\_at & Fecha de creación del registro. & TIMESTAMP WITH TIME ZONE \\ \hline
+updated\_at & Fecha de última actualización del registro. & TIMESTAMP WITH TIME ZONE \\ \hline
+
+\textbf{Objetivo} & 
+\multicolumn{2}{X|}{Servir como soporte transversal para la seguridad, trazabilidad y sincronización del sistema, permitiendo que los diferentes módulos operen de forma coherente y controlada.} \\ \hline
+
+\end{tabularx}
+
+\caption{Formato de documentación del Modelo del Dominio}
+\label{tab:modelo_dominio_autenticacion_roles_indexer}
+\normalsize
+\end{table}
+
+\subsection{Requerimientos de Desempeño}
+Los requerimientos de desempeño del sistema Stellar Tickets definen las condiciones mínimas bajo las cuales la aplicación debe funcionar de manera estable para los diferentes tipos de usuario, estos requerimientos consideran la cantidad de usuarios conectados al sistema, el acceso desde navegadores web en computador o móvil, las acciones principales que realizan los usuarios y los tiempos de respuesta esperados para operaciones como consulta de eventos, compra de boletos, reventa P2P y validación QR en puerta.
+
+\subsubsection{Requerimientos estáticos de desempeño}
+Los requerimientos estáticos hacen referencia a la capacidad que debe soportar el sistema en términos de usuarios, dispositivos y módulos disponibles al mismo tiempo.
+\begin{table}[H]
+\centering
+\tiny
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\begin{tabularx}{\textwidth}{|p{1.3cm}|X|p{1.5cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requerimiento de desempeño} & \textbf{Tipo} & \textbf{Criterio de medición} \\ \hline
+
+\textbf{RD-01} & 
+El sistema debe permitir el acceso simultáneo de usuarios tipo \texttt{CUSTOMER}, \texttt{ADMIN} y \texttt{STAFF}, cada uno con las funcionalidades correspondientes a su rol. & 
+Estático & 
+Durante una prueba de uso, cada rol debe visualizar únicamente las pantallas y acciones autorizadas sin afectar el acceso de los demás usuarios. \\ \hline
+
+\textbf{RD-02} & 
+El sistema debe soportar el acceso desde navegadores modernos en dispositivos de escritorio y móviles, sin requerir una aplicación nativa. & 
+Estático & 
+La aplicación debe cargar correctamente en navegadores web modernos y adaptarse a pantallas de computador y celular. \\ \hline
+
+\textbf{RD-03} & 
+El sistema debe permitir que usuarios \texttt{CUSTOMER} naveguen por el catálogo, consulten eventos, gestionen carrito, compren boletos y accedan a Mis Entradas. & 
+Estático & 
+Las pantallas principales del \texttt{CUSTOMER} deben estar disponibles durante la sesión del usuario autenticado. \\ \hline
+
+\textbf{RD-04} & 
+El sistema debe permitir que usuarios \texttt{ADMIN} accedan al panel administrativo para crear eventos y consultar contratos desplegados en Soroban. & 
+Estático & 
+El panel administrativo debe estar disponible únicamente para usuarios con rol \texttt{ADMIN}. \\ \hline
+
+\textbf{RD-05} & 
+El sistema debe permitir que usuarios \texttt{STAFF} accedan únicamente al escáner QR para validar boletos en puerta. & 
+Estático & 
+El usuario \texttt{STAFF} no debe tener acceso a funciones de compra, reventa o administración general. \\ \hline
+
+\textbf{RD-06} & 
+El sistema debe soportar múltiples dispositivos conectados al mismo tiempo, incluyendo computadores para administración y celulares para consulta o validación de boletos. & 
+Estático & 
+La aplicación debe mantener sesiones activas desde distintos dispositivos sin bloquear la operación general del sistema. \\ \hline
+
+\end{tabularx}
+
+\caption{Requerimientos de desempeño}
+\label{tab:requerimientos_desempeno}
+\normalsize
+\end{table}
+
+\subsubsection{Requerimientos dinámicos de desempeño}
+Los requerimientos dinámicos se relacionan con el comportamiento del sistema cuando los usuarios realizan acciones específicas y para este caso, se deben considerar los tiempos de respuesta de las pantallas principales y la rapidez de las operaciones más importantes.
+
+\begin{table}[H]
+\centering
+\tiny
+\renewcommand{\arraystretch}{0.95}
+\setlength{\tabcolsep}{2.5pt}
+
+\begin{tabularx}{\textwidth}{|p{1.25cm}|X|p{1.4cm}|X|}
+\hline
+\textbf{ID} & \textbf{Requerimiento de desempeño} & \textbf{Tipo} & \textbf{Criterio de medición} \\ \hline
+
+\textbf{RD-07} &
+El sistema debe cargar el catálogo de eventos en un tiempo máximo de \textbf{3 segundos} bajo condiciones normales de conexión. &
+Dinámico &
+Al ingresar al catálogo, los eventos deben mostrarse en máximo 3 segundos. \\ \hline
+
+\textbf{RD-08} &
+El sistema debe aplicar filtros por categoría o ciudad en un tiempo máximo de \textbf{2 segundos}. &
+Dinámico &
+Al seleccionar un filtro, la lista de eventos debe actualizarse en máximo 2 segundos. \\ \hline
+
+\textbf{RD-09} &
+El sistema debe cargar el detalle de un evento y mostrar la disponibilidad de boletos generales o con asiento en un tiempo máximo de \textbf{3 segundos}. &
+Dinámico &
+La información del evento y sus boletos debe estar visible antes de superar el tiempo definido. \\ \hline
+
+\textbf{RD-10} &
+El sistema debe actualizar el carrito de compras en un tiempo máximo de \textbf{2 segundos} después de agregar, modificar o eliminar boletos. &
+Dinámico &
+Cada acción sobre el carrito debe reflejarse correctamente en la interfaz. \\ \hline
+
+\textbf{RD-11} &
+El sistema debe procesar el checkout con pago simulado en un tiempo máximo de \textbf{5 segundos}, siempre que los servicios necesarios estén disponibles. &
+Dinámico &
+Al confirmar la compra, el sistema debe generar la orden y asignar los boletos dentro del tiempo establecido. \\ \hline
+
+\textbf{RD-12} &
+El sistema debe cargar la sección \textbf{Mis Entradas} en un tiempo máximo de \textbf{3 segundos}. &
+Dinámico &
+El usuario debe visualizar sus boletos adquiridos sin superar el tiempo definido. \\ \hline
+
+\textbf{RD-13} &
+El sistema debe permitir conectar la wallet Freighter en un tiempo razonable, dependiendo de la autorización del usuario desde la extensión. &
+Dinámico &
+Una vez el usuario apruebe la conexión en Freighter, la wallet debe quedar vinculada a su cuenta. \\ \hline
+
+\textbf{RD-14} &
+El sistema debe publicar un boleto en el mercado de Reventa P2P en un tiempo máximo de \textbf{5 segundos}, excluyendo tiempos externos de confirmación Web3 cuando apliquen. &
+Dinámico &
+El boleto debe cambiar su estado a ``en venta'' y aparecer en el módulo de Reventa P2P. \\ \hline
+
+\textbf{RD-15} &
+El sistema debe cargar los boletos disponibles en Reventa P2P en un tiempo máximo de \textbf{3 segundos}. &
+Dinámico &
+La pantalla de reventa debe mostrar únicamente boletos activos y disponibles. \\ \hline
+
+\textbf{RD-16} &
+El sistema debe registrar la compra de un boleto en reventa después de la firma del usuario en Freighter, considerando que la confirmación puede depender de servicios blockchain externos. &
+Dinámico &
+Después de firmar, el boleto debe actualizarse y aparecer asociado al nuevo comprador. \\ \hline
+
+\textbf{RD-17} &
+El sistema debe cargar el historial de \textbf{Mis Ventas P2P} en un tiempo máximo de \textbf{3 segundos}. &
+Dinámico &
+El usuario vendedor debe poder consultar sus ventas con monto y wallet del comprador. \\ \hline
+
+\textbf{RD-18} &
+El sistema debe validar un código QR en puerta en un tiempo máximo de \textbf{2 segundos} bajo condiciones normales. &
+Dinámico &
+Al escanear el QR, el sistema debe responder rápidamente si el boleto es válido, usado, invalidado o vencido. \\ \hline
+
+\textbf{RD-19} &
+El sistema debe rechazar de forma inmediata los boletos con QR vencido, usado o invalidado. &
+Dinámico &
+El sistema debe mostrar una respuesta de rechazo y evitar que el boleto sea redimido. \\ \hline
+
+\textbf{RD-20} &
+El sistema debe mantener una navegación fluida entre pantallas principales de la SPA, evitando recargas completas innecesarias. &
+Dinámico &
+La transición entre catálogo, detalle, carrito, Mis Entradas y Reventa P2P debe realizarse desde la interfaz web sin pérdida de sesión. \\ \hline
+
+\end{tabularx}
+
+\caption{Requerimientos de desempeño dinámicos}
+\label{tab:requerimientos_desempeno_dinamicos}
+\normalsize
+\end{table}
+
+\subsection{Restricciones de Diseño}
+El diseño del sistema Stellar Tickets se encuentra condicionado por decisiones tecnológicas, arquitectónicas y de despliegue previamente definidas en el documento de diseño de software, estas restricciones deben ser tenidas en cuenta durante la implementación, ya que determinan los lenguajes, herramientas, arquitectura, infraestructura y modelo de datos que se utilizarán para construir la solución.
+
+\subsubsection{Lenguajes de programación}
+El sistema debe desarrollarse utilizando los lenguajes definidos para cada capa de la arquitectura. La capa de presentación debe implementarse con TypeScript, utilizando React 18 y Vite para construir una aplicación web SPA, la capa de servicios también debe usar TypeScript, ejecutándose sobre Node.js con Express. Ahora, la capa blockchain debe desarrollarse en Rust, ya que los contratos inteligentes de Soroban se compilan a WebAssembly (WASM). Esta restricción se debe a que el documento de arquitectura define el uso de Stellar/Soroban como plataforma blockchain y establece que los contratos deben escribirse en Rust y compilarse a WASM.
+
+\subsubsection{Herramientas de análisis, diseño e implementación}
+Para el análisis y diseño del sistema se debe mantener la documentación
+arquitectónica bajo el enfoque del modelo C4, utilizado para representar el
+contexto y los contenedores del sistema. El SAD indica que este modelo permite
+comunicar la arquitectura a diferentes niveles de detalle y es adecuado para un
+sistema híbrido con componentes \textit{on-chain} y \textit{off-chain}.
+
+En la implementación, el proyecto debe organizarse como un monorepo que contiene
+los contratos Soroban, el backend y el frontend. La estructura documentada
+incluye una carpeta \texttt{contracts/} para los contratos en Rust, una carpeta
+\texttt{backend/} para el servidor Express con Prisma e indexador Soroban, y una
+carpeta \texttt{frontend/} para la aplicación React con TypeScript y Freighter.
+
+\subsubsection{Restricciones de Hardware y Software}
+El sistema no requiere hardware propio, servidores físicos ni máquinas virtuales
+administradas directamente por el equipo. Su despliegue debe realizarse sobre
+servicios cloud y, según la vista de despliegue del SAD, el cliente utiliza un
+navegador con Freighter, el frontend se sirve desde Vercel, el backend e
+indexador se ejecutan en Railway o Render, la base de datos está en Supabase con
+PostgreSQL 16 y la capa blockchain opera sobre Stellar Testnet con Soroban.
+
+Una restricción importante es que el indexador Soroban requiere un proceso
+persistente, por lo que debe ejecutarse en un entorno \textit{long-lived} como
+Railway o Render. Este no debe ejecutarse en un entorno \textit{serverless} como
+Vercel, ya que allí se desactiva el \texttt{app.listen()} y el indexador.
+
+Además, el sistema depende de variables de entorno obligatorias para operar
+correctamente, como \texttt{DATABASE\_URL}, \texttt{JWT\_SECRET},
+\texttt{SOROBAN\_RPC\_URL}, \texttt{ORGANIZER\_SECRET},
+\texttt{FACTORY\_CONTRACT\_ID} y \texttt{VITE\_API\_BASE\_URL}. En producción,
+\texttt{JWT\_SECRET} es obligatorio y el servidor no debe arrancar si no está
+definido.
+
+\subsubsection{Restricciones de arquitectura}
+El sistema debe seguir una arquitectura por capas, separando claramente la presentación, los servicios, los datos y la blockchain, teniendo en cuenta el documento SAD define cuatro capas principales, la capa de presentación, encargada de la interfaz de usuario, la capa de servicios, encargada de la lógica off-chain, autenticación y endpoints, la capa de datos, basada en PostgreSQL para consultas rápidas, auditoría e indexación y la capa blockchain, responsable de la lógica on-chain y la fuente de verdad para propiedad de tickets y pagos.
+
+También se debe mantener la separación entre lógica on-chain y off-chain y el principio de diseño documentado indica que lo relacionado con propiedad o dinero debe ejecutarse on-chain, mientras que lo que requiere consultas rápidas o contexto de negocio debe resolverse off-chain.
+
+\subsubsection{Restricciones de Blockchain y contratos inteligentes}
+El sistema debe operar sobre Stellar Testnet y utilizar contratos inteligentes
+Soroban. Al tratarse de un prototipo académico, la red utilizada no maneja activos
+con valor monetario real y puede presentar limitaciones propias de una red de prueba.
+
+El diseño de contratos debe mantener el patrón \textit{Factory}, donde un contrato
+\texttt{FabricaBoletos} despliega un contrato independiente por cada evento, lo que
+permite aislar la configuración, el almacenamiento y los fondos de cada evento, como
+se muestra en el SAD. También se establece que la compra en reventa debe aplicar el
+patrón \textit{burn/remint}, invalidando la versión anterior del boleto y creando
+una nueva versión para el comprador.
+
+Adicionalmente, las operaciones que modifican estado en los contratos deben validar
+autorización mediante \texttt{require\_auth()}, esto aplica para acciones como crear
+boletos, listar boletos, cancelar ventas, comprar boletos, redimir e invalidar
+boletos. Además, las reglas de integridad del contrato impiden, por ejemplo, revender
+boletos usados o invalidados, comprar el propio boleto o reutilizar versiones anteriores.
+
+\subsubsection{Restricciones de la base de datos}
+El modelo de datos debe construirse sobre PostgreSQL 16 en Supabase, utilizando
+el \texttt{schema ticketing}. La base de datos debe almacenar usuarios, eventos,
+boletos, órdenes, pagos, carrito, inventario de asientos, historial de compras e
+información Web3 sincronizada desde blockchain.
+
+Los boletos deben conservar campos que permitan relacionar la base de datos con
+la blockchain, como \texttt{contract\_address}, \texttt{ticket\_root\_id},
+\texttt{version}, \texttt{is\_for\_sale}, \texttt{resale\_price} y
+\texttt{owner\_wallet}. Además, debe mantenerse una restricción única sobre la
+combinación \texttt{contract\_address}, \texttt{ticket\_root\_id} y
+\texttt{version}, ya que esta permite identificar de forma precisa cada versión
+de un boleto.
+
+La base de datos no reemplaza la blockchain como fuente de verdad para propiedad
+y pagos. Su función principal es facilitar consultas rápidas, auditoría,
+indexación y experiencia de usuario. Adicionalmente, la sincronización con
+blockchain debe realizarse mediante el indexador Soroban, que actualiza
+PostgreSQL a partir de los eventos \textit{on-chain}.
+
+\subsubsection{Restricciones de autenticacion y seguridad}
+La autenticación debe implementarse mediante JWT y contraseñas cifradas con bcrypt. El backend debe validar los roles de usuario en las rutas protegidas, especialmente en las funciones administrativas y en el escáner QR y el documento SAD establece que el backend utiliza JWT, bcrypt y verificación de roles para endpoints de administración y escaneo.
+
+El sistema debe manejar tres roles principales CUSTOMER, ADMIN y STAFF, el rol CUSTOMER accede a compra, entradas y reventa, el ADMIN accede a gestión de eventos, contratos y validación, el STAFF solo accede al escáner QR, con esta restricción condiciona el diseño de rutas, permisos, vistas y validaciones del backend.
+
+\subsubsection{Restricciones de despliegue}
+El frontend debe desplegarse como una \textit{SPA} en Vercel, mientras que el
+backend principal y el indexador deben desplegarse en Railway o Render. La base
+de datos debe permanecer en Supabase y las operaciones blockchain deben
+ejecutarse sobre Stellar Testnet. El SAD presenta esta topología de despliegue como
+una estructura \textit{cloud} con cliente, frontend, backend/indexador, base de
+datos y blockchain.
+
+En desarrollo local, el frontend debe ejecutarse con \texttt{npm run dev} usando
+Vite, y el backend con \texttt{npm run dev} sobre \texttt{tsx watch}. Esto permite
+mantener separados los entornos de desarrollo y producción, respetando la
+estructura definida en el documento de diseño.
+
+\subsection{Atributos del Sistema de Software (No funcionales)}
+\subsubsection{Seguridad}
+\begin{itemize}
+    \item Descripción: Garantizar que cada usuario solo pueda realizar operaciones autorizadas según su rol (CUSTOMER, ADMIN, STAFF), que las transacciones de compra y reventa sean atómicas y que los boletos no puedan falsificarse ni duplicarse.
+    \item Criterios de medición: Validación de roles en cada endpoint; pruebas de acceso indebido; verificación de firmas on-chain para transacciones Soroban.
+    \item Prioridad: Alta
+\end{itemize}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RNF-01 & \textbf{Tipo de Requerimiento} & No funcional \\ \hline
+
+\textbf{Casos de Uso Asociados} & \multicolumn{3}{X|}{CU-02, CU-03, CU-04, CU-05, CU-06} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Garantizar que las operaciones del sistema se realicen de forma segura: autenticación de usuarios, permisos por rol y firma de transacciones Web3 mediante Freighter.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Protege la información de los usuarios y previene accesos no autorizados o fraudes en compra, reventa y redención de boletos.} \\ \hline
+
+\textbf{Autor} & \multicolumn{3}{X|}{Equipo de desarrollo} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Todas las rutas protegidas verifican JWT y roles; pruebas de intento de acceso indebido fallan; las transacciones Web3 requieren firma válida.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Seguridad / Autenticación \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos No Funcionales RNF-01}
+\label{tab:documentacion_rnf01}
+\normalsize
+\end{table}
+
+\subsubsection{Integridad}
+\begin{itemize}
+    \item Descripción: Las transacciones de compra y reventa deben ejecutarse de forma atómica, evitando estados inconsistentes donde un pago se procese pero el boleto no se transfiera, o viceversa.
+    \item Criterios de medición: Simulación de transacciones concurrentes; revisión de logs de blockchain y base de datos; chequeo de consistencia entre off-chain y on-chain.
+    \item Prioridad: Alta
+\end{itemize}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3.2cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RNF-02 & \textbf{Tipo de Requerimiento} & No funcional \\ \hline
+
+\textbf{Casos de Uso Asociados} & \multicolumn{3}{X|}{CU-02, CU-04} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Mantener la consistencia de la información entre la base de datos y blockchain, evitando inconsistencias en compras, reventas o redenciones.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Garantiza que las transacciones sean confiables y los datos reflejen la realidad de la propiedad de boletos.} \\ \hline
+
+\textbf{Autor} & \multicolumn{3}{X|}{Equipo de desarrollo} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Transacciones completadas correctamente reflejan cambios consistentes en DB y blockchain; no se generan duplicados ni pérdidas de datos.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Blockchain / Base de datos \\ \hline
+
+\textbf{Versión} & 2.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos No Funcionales RNF-02}
+\label{tab:documentacion_rnf02}
+\normalsize
+\end{table}
+
+\subsubsection{Trazabilidad}
+\begin{itemize}
+    \item Descripción: Mantener historial completo de versiones de cada boleto, incluyendo transferencias, reventas y cambios de estado. Esto permite auditar la propiedad y la procedencia de cada ticket.
+    \item Criterios de medición: Cada versión del boleto debe estar registrada y disponible para consulta; pruebas de reconstrucción de la cadena de propiedad desde cualquier versión.
+    \item Prioridad: Alta
+\end{itemize}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3.2cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RNF-03 & \textbf{Tipo de Requerimiento} & No funcional \\ \hline
+
+\textbf{Casos de Uso Asociados} & \multicolumn{3}{X|}{CU-01, CU-02, CU-03, CU-04, CU-05} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{La plataforma debe permanecer accesible para los usuarios y personal \texttt{STAFF} incluso durante picos de tráfico y latencia de servicios externos.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Garantiza que los usuarios puedan realizar consultas, compras y validaciones sin interrupciones.} \\ \hline
+
+\textbf{Autor} & \multicolumn{3}{X|}{Equipo de desarrollo} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Disponibilidad mínima del 99\% en pruebas de carga; consultas al catálogo y redención de boletos responden según los tiempos definidos.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Frontend / Backend / Indexer \\ \hline
+
+\textbf{Versión} & 1.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos No Funcionales RNF-03}
+\label{tab:documentacion_rnf03}
+\normalsize
+\end{table}
+
+\subsubsection{Modificabilidad}
+\begin{itemize}
+    \item Descripción: Separación clara entre lógica on-chain (Soroban) y off-chain (PostgreSQL), permitiendo actualizar la base de datos o la interfaz sin afectar la integridad de los contratos.
+    \item Criterios de medición: Simulación de cambios en la base de datos o en el frontend sin interrumpir transacciones en blockchain; pruebas de despliegue incremental.
+    \item Prioridad: Medio
+\end{itemize}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3.2cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RNF-04 & \textbf{Tipo de Requerimiento} & No funcional \\ \hline
+
+\textbf{Casos de Uso Asociados} & \multicolumn{3}{X|}{CU-03, CU-04, CU-05} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Mantener registro completo de la propiedad de boletos, incluyendo cambios de versión, reventas y transacciones realizadas por cada usuario.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Permite auditar la propiedad y asegurar que los boletos no sean duplicados ni utilizados indebidamente.} \\ \hline
+
+\textbf{Autor} & \multicolumn{3}{X|}{Equipo de desarrollo} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Todos los boletos tienen historial disponible y se puede reconstruir la cadena de propiedad.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Base de datos / Blockchain \\ \hline
+
+\textbf{Versión} & 1.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos No Funcionales RNF-04}
+\label{tab:documentacion_rnf04}
+\normalsize
+\end{table}
+\subsubsection{Disponibilidad}
+\begin{itemize}
+    \item Descripción: El backend debe ser resiliente; consultas de catálogo, Mis Entradas y Reventa P2P deben estar disponibles aun si alguna parte de la red blockchain tiene latencia.
+    \item Criterios de medición: Pruebas de carga con fallos simulados de RPC Soroban o de la base de datos; porcentaje de tiempo en que los servicios críticos permanecen operativos.
+    \item Prioridad: Alta
+\end{itemize}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3.2cm}|X|}
+\hline
+\textbf{\# Requerimiento} & RNF-05 & \textbf{Tipo de Requerimiento} & No funcional \\ \hline
+
+\textbf{Casos de Uso Asociados} & \multicolumn{3}{X|}{CU-02, CU-03, CU-04, CU-05} \\ \hline
+
+\textbf{Descripción} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Las operaciones críticas del sistema (consultar catálogo, carrito, checkout, reventa, validación QR) deben completarse dentro de los tiempos de respuesta establecidos.} \\ \hline
+
+\textbf{Razón} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Mejora la experiencia de usuario y garantiza flujo eficiente en compra y acceso a eventos.} \\ \hline
+
+\textbf{Autor} & \multicolumn{3}{X|}{Equipo de desarrollo} \\ \hline
+
+\textbf{Criterio de medición} & 
+\multicolumn{3}{p{\dimexpr\textwidth-6cm-12\tabcolsep-4\arrayrulewidth\relax}|}{Catálogo y filtros <3 seg; Checkout <5 seg; QR <2 seg; Reventa P2P <5 seg.} \\ \hline
+
+\textbf{Prioridad} & Alta & \textbf{Módulo Asociado} & Frontend / Backend / Indexer \\ \hline
+
+\textbf{Versión} & 1.0 & \textbf{Fecha} & [19/05/2026] \\ \hline
+
+\end{tabularx}
+
+\caption{Documentación de Requerimientos No Funcionales RNF-05}
+\label{tab:documentacion_rnf05}
+\normalsize
+\end{table}
+
+\subsection{Requerimientos de la base de datos}
+\subsubsection{Tipos de datos almacenados}
+Se deben definir los tipos de datos más usados según PostgreSQL (motor elegido en Supabase) para cada tabla.
+\begin{table}[H]
+\centering
+\tiny
+\renewcommand{\arraystretch}{1.05}
+\setlength{\tabcolsep}{3pt}
+
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\hline
+\textbf{Entidad} & \textbf{Campo} & \textbf{Tipo de dato} & \textbf{Comentario} \\ \hline
+
+Usuario     & user\_id       & UUID                             & Primary key                        \\ \hline
+Usuario     & name           & VARCHAR(150)                     & Nombre completo                    \\ \hline
+Usuario     & email          & VARCHAR(255)                     & Único, usado para login            \\ \hline
+Usuario     & password\_hash & VARCHAR(255)                     & Contraseña cifrada                 \\ \hline
+Usuario     & role           & ENUM('CUSTOMER','ADMIN','STAFF') & Rol del usuario                    \\ \hline
+
+Evento      & event\_id       & UUID                             & Primary key                        \\ \hline
+Evento      & title           & VARCHAR(255)                     & Título del evento                  \\ \hline
+Evento      & event\_date     & TIMESTAMP WITH TIME ZONE         & Fecha y hora                       \\ \hline
+Evento      & capacity        & INTEGER                          & Número máximo de boletos           \\ \hline
+
+Boleto      & ticket\_root\_id & VARCHAR(100)                     & Identificador raíz para blockchain \\ \hline
+Boleto      & version        & INTEGER                          & Control de versiones               \\ \hline
+Boleto      & owner\_wallet   & VARCHAR(56)                      & Wallet actual propietaria          \\ \hline
+
+Orden       & order\_id       & UUID                             & Primary key                        \\ \hline
+Orden       & total           & NUMERIC(12,2)                    & Monto total de la compra           \\ \hline
+
+Reventa P2P & resale\_id      & UUID                             & Primary key                        \\ \hline
+Reventa P2P & resale\_price   & NUMERIC(12,2)                    & Precio de reventa                  \\ \hline
+
+\end{tabularx}
+
+\caption{Modelo de datos: entidades y campos principales}
+\label{tab:modelo_datos_principal}
+\normalsize
+\end{table}
+
+\subsubsection{Tipo de consultas utilizadas}
+Para proteger la base de datos y evitar inyecciones:
+
+\begin{itemize}
+    \item Todas las consultas deben ejecutarse mediante Prepared Statements.
+    \item Los DAO (Data Access Objects) se encargan de construir consultas parametrizadas.
+    \item Las consultas frecuentes incluyen:
+    \begin{itemize}
+    \item Selección de eventos disponibles: \texttt{SELECT * FROM events WHERE ...}
+    \item Inserción de órdenes y boletos: \texttt{INSERT INTO orders ...}
+    \item Actualización de estado de boletos: \texttt{UPDATE tickets SET status=...}
+    \item Consultas de reventa P2P: \texttt{SELECT * FROM resale WHERE status='listed'}
+\end{itemize} 
+\end{itemize}
+
+\subsubsection{Indexación de los datos}
+Para optimizar consultas:
+
+\begin{itemize}
+    \item Se deben crear índices en campos de búsqueda frecuente:
+    \begin{itemize}
+        \item \texttt{event\_id} en tabla \texttt{tickets} y \texttt{orders}
+        \item \texttt{ticket\_root\_id} y \texttt{version} en tabla \texttt{tickets}
+        \item \texttt{resale\_status} y \texttt{owner\_wallet} en tabla \texttt{resale}
+        \item \texttt{email} en tabla \texttt{users}
+    \end{itemize}
+    \item Los índices ayudan a mejorar tiempos de respuesta en consultas de catálogo, historial de ventas y reventas P2P.
+    \item El diagrama entidad-relación debe reflejar las relaciones principales:
+    \begin{itemize}
+        \item \texttt{User $\rightarrow$ Order $\rightarrow$ Ticket}
+        \item \texttt{Event $\rightarrow$ Ticket}
+        \item \texttt{Ticket $\rightarrow$ Resale}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Uso de las Primary Key}
+Cada tabla tiene \textbf{primary key} única:
+\begin{itemize}
+    \item \texttt{user\_id} para \texttt{users}
+    \item \texttt{event\_id} para \texttt{events}
+    \item \texttt{ticket\_root\_id} + \texttt{version} para \texttt{tickets}
+    \item \texttt{order\_id} para \texttt{orders}
+    \item \texttt{resale\_id} para \texttt{resale}
+\end{itemize}
+
+Permite consultas rápidas y evita ciclos o duplicidades, lo que garantiza integridad referencial con \textbf{foreign keys}:
+\begin{itemize}
+    \item \texttt{tickets.event\_id} $\rightarrow$ \texttt{events.event\_id}
+    \item \texttt{orders.user\_id} $\rightarrow$ \texttt{users.user\_id}
+    \item \texttt{resale.ticket\_id} $\rightarrow$ \texttt{tickets.ticket\_root\_id}
+\end{itemize}
+
+\subsubsection{Frecuencia de acceso y conexiones}
+La base de datos debe soportar múltiples conexiones concurrentes, considerando:
+
+\begin{itemize}
+    \item Clientes navegando y comprando boletos.
+    \item Admin creando eventos y consultando contratos.
+    \item Indexer sincronizando cada 5 segundos con blockchain.
+\end{itemize}
+
+Se recomienda \textbf{connection pool} con límite de 5 conexiones (\texttt{connection\_limit=5}).
+
+\textbf{Consultas frecuentes y críticas:}
+\begin{itemize}
+    \item \texttt{SELECT} para catálogo y reventa P2P
+    \item \texttt{INSERT} para órdenes y transacciones
+    \item \texttt{UPDATE} para cambios de estado de boletos
+    \item \texttt{DELETE} limitado solo a cancelaciones de carrito o reventa
+\end{itemize}
+El uso de \textbf{DAO} y \textbf{Prepared Statements} reduce la carga de procesamiento y protege contra inyección SQL.
+
+\section{Proceso de Ingeniería de Requerimientos}
+
+El proceso de ingeniería de requerimientos para el sistema \textit{Stellar Tickets}
+se ha realizado siguiendo un enfoque iterativo y colaborativo, que asegura la
+claridad, trazabilidad y control sobre los cambios. Este proceso se complementa
+con los mecanismos de control definidos en el SPMP, que incluyen localización de
+requisitos, control de versiones y trazabilidad entre requerimientos, casos de
+uso y módulos del sistema.
+
+\subsection{Técnicas utilizadas}
+
+\textbf{Análisis de stakeholders}  
+Se identificaron los actores principales: \texttt{CUSTOMER}, \texttt{ADMIN} y
+\texttt{STAFF}. Se registraron necesidades funcionales y no funcionales basadas
+en sus roles, permisos y flujo de interacción con el sistema.
+
+\textbf{Revisión de documentación existente}  
+Se analizaron referencias de proyectos similares y documentación de la red
+\textit{Stellar}, contratos \textit{Soroban} y estándares Web3. Se revisaron
+buenas prácticas de SPA, gestión de wallets y reventa de tickets digitales.
+
+\textbf{Modelado de casos de uso y diagramas}  
+Se construyeron diagramas de casos de uso que representan las funcionalidades
+principales del sistema y sus interacciones con los actores. Cada requerimiento
+funcional se vinculó con los casos de uso correspondientes para garantizar
+trazabilidad.
+
+\textbf{Descomposición por módulos y funcionalidades}  
+Los requerimientos se organizaron por módulos:
+\begin{itemize}
+    \item Gestión de eventos y contratos
+    \item Compra primaria de boletos
+    \item Wallets e integración Web3
+    \item Blockchain y NFTs
+    \item Reventa P2P
+    \item Validación QR y redención en puerta
+    \item Administración de boletos
+\end{itemize}
+
+\textbf{Documentación estructurada}  
+Se utilizó la Tabla 7 para todos los requerimientos funcionales y no funcionales.
+Se documentó: ID, tipo de requerimiento, casos de uso asociados, descripción,
+razón, autor, criterio de medición, prioridad, módulo asociado, versión y fecha.
+Se definieron criterios medibles de desempeño, seguridad, integridad,
+trazabilidad y disponibilidad para cada requisito.
+
+\textbf{Definición de requerimientos no funcionales y de desempeño}  
+Se establecieron límites claros para tiempos de respuesta, número de usuarios
+concurrentes, frecuencia de consultas, sincronización con blockchain y
+validación de QR. Se documentaron criterios de medición verificables para
+garantizar que el sistema cumpla con los estándares de calidad definidos.
+
+\subsection{Métodos de gestión de cambios}
+
+\textbf{Control de versiones y trazabilidad}  
+Cada requerimiento tiene un ID único que permite localizarlo rápidamente.
+Los cambios se registran con la versión actualizada y la fecha, manteniendo
+historial de modificaciones.
+
+\textbf{Revisión y aprobación}  
+Todo cambio propuesto por el cliente o el equipo de desarrollo es revisado por
+los responsables del proyecto antes de ser aprobado. Se verifica que la
+modificación no afecte negativamente otros requerimientos ni la integridad
+del sistema.
+
+\textbf{Impacto en módulos y casos de uso}  
+Cada cambio se analiza respecto al módulo y caso de uso asociado. Esto asegura
+que se pueda actualizar la documentación de manera consistente y que los
+desarrolladores comprendan cómo afecta al sistema.
+
+\textbf{Integración con SPMP}  
+Los cambios se gestionan siguiendo las directrices del \textit{Software Project
+Management Plan}, que establece los mecanismos de revisión, control y
+trazabilidad. Se asegura que los requerimientos actualizados se reflejen tanto
+en el SRS como en el SDD y en el modelo de dominio.
+
+\section{Proceso de Verificación}
+
+El proceso de verificación y validación del sistema \textit{Stellar Tickets} se
+basa en asegurar que cada requerimiento funcional, no funcional y de desempeño
+cumpla con los criterios de calidad definidos en este SRS. Se aplican métodos
+tanto estáticos (revisión de documentación y consistencia) como dinámicos
+(pruebas funcionales, de carga y de integración con blockchain).
+
+\subsection{Verificación de requerimientos funcionales}
+
+\textbf{Revisión de consistencia y trazabilidad}  
+\begin{itemize}
+    \item Cada RF se cruza con su caso de uso correspondiente.
+    \item Se revisa que todos los elementos documentados (usuario, módulo, entrada,
+    proceso, salida) sean consistentes y completos.
+    \item Se asegura que cada RF tenga un ID único y esté vinculado a su módulo.
+\end{itemize}
+
+\textbf{Pruebas funcionales unitarias}  
+\begin{itemize}
+    \item Cada funcionalidad (ej. creación de eventos, compra de boletos, reventa P2P,
+    validación QR) se prueba con distintos test como se especifica en el documento
+    de pruebas.
+    \item Se verifica que las acciones del usuario produzcan los resultados esperados
+    (por ejemplo, al comprar un boleto, se genera la orden y el ticket se asigna
+    correctamente).
+\end{itemize}
+
+\textbf{Pruebas de integración}  
+\begin{itemize}
+    \item Se realizan pruebas que combinan varias funcionalidades, por ejemplo:
+    \begin{itemize}
+        \item Compra primaria $\rightarrow$ Mis Entradas $\rightarrow$ Reventa P2P
+        \item Publicar boleto en reventa $\rightarrow$ Compra en reventa $\rightarrow$
+        Actualización de propiedad
+    \end{itemize}
+    \item Se comprueba que la información entre módulos (frontend, backend, blockchain
+    y base de datos) sea coherente.
+\end{itemize}
+
+\textbf{Pruebas de aceptación del usuario (UAT)}  
+\begin{itemize}
+    \item Se validan los flujos principales con usuarios simulados:
+    \begin{itemize}
+        \item \texttt{CUSTOMER}: registro, compra, reventa, wallet Web3
+        \item \texttt{ADMIN}: creación de eventos, gestión de contratos
+        \item \texttt{STAFF}: validación de boletos mediante QR
+    \end{itemize}
+    \item El objetivo es garantizar que el sistema cumple con los requerimientos
+    funcionales definidos en la sección 3.
+\end{itemize}
+
+\subsection{Verificación de requerimientos no funcionales y de desempeño}
+
+\textbf{Pruebas de rendimiento}  
+\begin{itemize}
+    \item Consultas al catálogo, carrito, checkout y sección \textit{Mis Entradas} se
+    prueban para asegurar tiempos de respuesta dentro de los límites definidos
+    (por ejemplo, catálogo $<$3s, checkout $<$5s).
+    \item Validación de QR en puerta se prueba bajo carga para garantizar respuesta $<$2s.
+\end{itemize}
+
+\textbf{Pruebas de seguridad}  
+\begin{itemize}
+    \item Validación de autenticación y roles (\texttt{CUSTOMER}, \texttt{ADMIN},
+    \texttt{STAFF}).
+    \item Pruebas de acceso indebido a rutas protegidas, incluyendo endpoints Web3 y
+    administración.
+    \item Revisión de almacenamiento de información sensible: \texttt{password\_hash},
+    \texttt{ORGANIZER\_SECRET}, \texttt{JWT\_SECRET} y \texttt{wallet\_address}.
+\end{itemize}
+
+\textbf{Pruebas de integridad y trazabilidad}  
+\begin{itemize}
+    \item Verificación de que cada boleto comprado, revendido o invalidado mantiene
+    historial completo en la base de datos y blockchain.
+    \item Se ejecutan pruebas de reventa P2P para comprobar que \textit{burn/remint}
+    y actualización de propiedad funcionen correctamente.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{|p{4cm}|X|}
+\hline
+\textbf{Método} & \textbf{Descripción} \\ \hline
+
+Revisión de documentación & Verificar que todos los requerimientos estén completos, consistentes y trazables. \\ \hline
+Pruebas unitarias & Evaluar funcionalidades individuales (registro, compra, publicación de boletos). \\ \hline
+Pruebas de integración & Evaluar interacciones entre módulos y sincronización con blockchain. \\ \hline
+Pruebas de carga & Simular múltiples usuarios concurrentes y medir desempeño de consultas y validaciones. \\ \hline
+Pruebas de aceptación & Validar que las funcionalidades cumplen las necesidades de cada tipo de usuario. \\ \hline
+Auditoría de blockchain & Confirmar que las transacciones reflejan correctamente la propiedad y estado de los boletos. \\ \hline
+
+\end{tabularx}
+
+\caption{Métodos de verificación y validación}
+\label{tab:metodos_verificacion}
+\normalsize
+\end{table}
+
+\section{Referencias}
+\begin{thebibliography}{99}
+
+\bibitem{ieee830}
+IEEE Std 830-1998, ``IEEE Recommended Practice for Software Requirements Specifications,'' IEEE Computer Society, 1998.
+
+\bibitem{kotler2016}
+P. Kotler y K. Keller, ``Dirección de Marketing,'' 15ª edición, Pearson Educación, México, 2016.
+
+\bibitem{stellar_whitepaper}
+Stellar Development Foundation, ``Stellar Whitepaper,'' [Online]. Available: \url{https://www.stellar.org/whitepaper}.
+
+\bibitem{soroban_docs}
+Soroban Documentation, Stellar Development Foundation, 2025. [Online]. Available: \url{https://soroban.stellar.org/docs}.
+
+\bibitem{freighter_api}
+Freighter Wallet API Documentation, Stellar Development Foundation, 2024. [Online]. Available: \url{https://github.com/stellar/freighter-api}.
+
+\bibitem{react_docs}
+React Documentation, ``React – A JavaScript library for building user interfaces,'' Meta, 2023. [Online]. Available: \url{https://reactjs.org/docs/getting-started.html}.
+
+\bibitem{typescript_docs}
+TypeScript Team, ``TypeScript: JavaScript With Syntax For Types,'' Microsoft, 2023. [Online]. Available: \url{https://www.typescriptlang.org/docs/}.
+
+\bibitem{tailwind_docs}
+Tailwind CSS Documentation, ``Tailwind CSS: A Utility-First CSS Framework,'' 2023. [Online]. Available: \url{https://tailwindcss.com/docs}.
+
+\bibitem{node_docs}
+Node.js Documentation, ``Node.js v18.x,'' OpenJS Foundation, 2023. [Online]. Available: \url{https://nodejs.org/en/docs/}.
+
+\bibitem{prisma_docs}
+Prisma Documentation, ``Next-generation Node.js and TypeScript ORM,'' 2023. [Online]. Available: \url{https://www.prisma.io/docs}.
+
+\bibitem{postgres_docs}
+PostgreSQL Global Development Group, ``PostgreSQL 16 Documentation,'' 2023. [Online]. Available: \url{https://www.postgresql.org/docs/16/}.
+
+\bibitem{tanstack_query}
+TanStack Query, ``TanStack Query Documentation,'' 2023. [Online]. Available: \url{https://tanstack.com/query/v4/docs/overview}.
+
+\bibitem{framer_motion}
+Framer Motion, ``Framer Motion Documentation,'' 2023. [Online]. Available: \url{https://www.framer.com/motion/}.
+
+\end{thebibliography}
 \end{document}
