@@ -32,6 +32,13 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
+% La clase 'report' antepone el número de capítulo a cada section (0.X).
+% Como este documento no usa chapters, redefinimos los contadores para
+% que la numeración sea X, X.Y, X.Y.Z sin el prefijo "0.".
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
 % ====== Metadatos del proyecto ======
 \newcommand{\projectname}{SecureTicket}
 \newcommand{\projectsubtitle}{Plataforma Web2.5 de boletería con NFTs en Stellar/Soroban}
@@ -116,124 +123,11 @@
   % ====== Cuerpo ======
   \pagenumbering{arabic}
 
-  % =========================================================
-  % SECCIÓN 1 — Introducción
-  % =========================================================
-  \section{Introducción}
-  \label{sec:introduccion}
-
-    \subsection{Propósito del documento}
-    Documentar el \textit{plan de gestión} ejecutado para construir \textbf{\projectname}, una \textbf{plataforma Web2.5 de boletería} que combina la experiencia de usuario tradicional (catálogo de eventos, carrito, \textit{checkout} con pago fiat simulado y cuenta de usuario) con una capa \textbf{opcional} de propiedad Web3 implementada como \textbf{NFTs SEP-41} sobre la red \textbf{Stellar} mediante contratos inteligentes \textbf{Soroban}. El plan describe los procesos, roles, artefactos y mecanismos de control que se aplicaron durante el semestre académico \textbf{2026-1} (enero -- 24 de mayo de 2026) para entregar un prototipo funcional desplegado en \textit{testnet}, junto con la documentación académica requerida.
-
-    \subsection{Audiencia y lectores}
-    \begin{itemize}
-      \item Miembros del equipo de proyecto (Grupo 12).
-      \item Director de trabajo de grado: \textbf{Rafael Vicente Páez Méndez, PhD}.
-      \item Docentes evaluadores y jurados del curso \textit{Planeación Proyecto Final} y del programa de Ingeniería de Sistemas.
-      \item Revisores académicos de la Pontificia Universidad Javeriana.
-    \end{itemize}
-
-    \subsection{Alcance del documento}
-    Este SPMP abarca:
-    \begin{itemize}
-      \item \textbf{Vista general} (Sección~\ref{sec:vista-general}): visión del producto, alcance entregado, objetivos cumplidos, supuestos, restricciones, entregables y resumen de calendarización y presupuesto.
-      \item \textbf{Contexto del proyecto} (Sección~8): modelo de ciclo de vida ágil/Kanban, lenguajes y herramientas (Rust/Soroban, Node/Express/Prisma, React/Vite, Supabase, Vercel, Railway, Freighter Wallet), plan de aceptación del producto y organización del equipo.
-      \item \textbf{Administración del proyecto} (Sección~9): métodos de estimación, plan de inicio, WBS, carta Gantt, asignación de recursos y presupuesto detallado.
-      \item \textbf{Monitoreo y control} (Sección~10): administración de requerimientos, métricas de progreso, KPIs (cobertura de pruebas, eventos desplegados en \textit{testnet}, defectos abiertos) y cierre de fases.
-      \item \textbf{Entrega del producto} (Sección~11): plan de transición y entrega al director y jurados.
-      \item \textbf{Procesos de soporte} (Sección~12): análisis y administración de riesgos, gestión de configuración, métricas y control de calidad.
-    \end{itemize}
-
-    \subsection{Relación con otros artefactos}
-    Este plan se integra con los siguientes documentos del trabajo de grado:
-    \begin{itemize}
-      \item \textbf{Memoria de TG:} documento principal del trabajo de grado que sintetiza problemática, marco teórico, metodología, resultados y conclusiones.
-      \item \textbf{Propuesta de TG:} anteproyecto aprobado que define el alcance académico del trabajo.
-      \item \textbf{SRS (Especificación de Requisitos de Software):} requisitos funcionales y no funcionales, historias de usuario y criterios de aceptación.
-      \item \textbf{SDD (Especificación del Diseño):} vistas arquitectónicas C4, modelo de datos on-chain/off-chain, diagramas de secuencia y atributos de calidad.
-      \item \textbf{Formato de Biblioteca:} formato institucional de entrega del trabajo de grado a la biblioteca de la Universidad.
-      \item \textbf{Demo final:} producto desplegado en \textit{testnet} presentado en vivo ante el director y los jurados, o bien como \textbf{video} grabado del recorrido completo de la plataforma, junto con los enlaces públicos al repositorio del código fuente.
-    \end{itemize}
-    Las decisiones de gestión descritas en este SPMP gobiernan la creación, revisión y mantenimiento de todos los artefactos listados.
-
-    \subsection{Cómo usar este documento}
-    \begin{itemize}
-      \item Para una \textbf{visión rápida del producto entregado}: leer Sección~\ref{sec:vista-general}.
-      \item Para consultar \textbf{procesos, prácticas, herramientas y métricas}: revisar Secciones~8 a~12.
-      \item Utilizar la \textbf{Tabla de Contenidos}, \textbf{Lista de Figuras} y \textbf{Lista de Tablas} para navegación directa.
-      \item Los \textbf{hipervínculos internos} (azul) facilitan referencias cruzadas entre secciones, tablas y figuras.
-    \end{itemize}
+  % La plantilla SPMP (ISO/IEC/IEEE 16326-2009) inicia el cuerpo en la Sección 6.
+  \setcounter{section}{5}
 
   % =========================================================
-  % SECCIÓN 3 — Definiciones, acrónimos y abreviaturas
-  % =========================================================
-  \section{Definiciones, acrónimos y abreviaturas}
-  \label{sec:glosario}
-    \begin{longtable}{@{}p{3.8cm} p{10.7cm}@{}}
-      \toprule
-      \textbf{Término} & \textbf{Definición}\\
-      \midrule
-      \endhead
-      \bottomrule
-      \endfoot
-      Web2.5 & Modelo híbrido que combina la experiencia tradicional Web2 (catálogo, carrito, checkout, cuenta de usuario) con una capa Web3 \textbf{opcional} (NFT, billetera, firma criptográfica). El usuario puede operar sin billetera; la blockchain es una capa de aseguramiento adicional.\\
-      NFT & \textit{Non-Fungible Token}: activo digital único y trazable que representa un boleto en blockchain. Cada NFT tiene un identificador único que impide duplicación o falsificación.\\
-      SEP-41 & \textit{Stellar Ecosystem Proposal 41}: estándar de \textit{token} en Soroban utilizado por el contrato \texttt{ticket\_nft\_contract} para que Freighter clasifique los boletos como \textit{Collectibles}.\\
-      Contrato inteligente & Programa autoejecutable desplegado en \textbf{Soroban} (Stellar) que gobierna la emisión, transferencia, comisiones, reventa y verificación de los boletos tokenizados.\\
-      Stellar & Red blockchain descentralizada diseñada para pagos rápidos y emisión de activos digitales. Utiliza el Protocolo de Consenso Stellar (SCP).\\
-      Soroban & Plataforma de \textit{smart contracts} sobre Stellar basada en WebAssembly (Wasm), que permite programar lógica de negocio en Rust.\\
-      Freighter Wallet & Extensión de navegador (billetera no-custodial) para Stellar. Los usuarios firman transacciones localmente; el backend nunca custodia llaves privadas.\\
-      XDR proxy & Patrón aplicado en el backend: construye \textit{transaction envelopes} (XDR) y los devuelve al frontend para que el usuario firme con su billetera, sin que el servidor tenga acceso a la llave privada.\\
-      Indexer & Proceso en segundo plano (cada 5 s) que consulta el RPC de Soroban, traduce eventos on-chain a actualizaciones en PostgreSQL y mantiene sincronizadas las vistas off-chain.\\
-      Boleto/Ticket & Entrada a un evento. Existe siempre como registro off-chain (PostgreSQL) y opcionalmente como NFT on-chain cuando el usuario decide ``asegurarlo'' en blockchain.\\
-      Burn/Remint & Mecanismo de reventa atómica: el NFT del vendedor se quema (\textit{burn}) y se mintea (\textit{remint}) una nueva versión a nombre del comprador en la misma transacción, evitando estados inconsistentes.\\
-      Reventa atómica P2P & Operación de mercado secundario \textit{peer-to-peer} ejecutada en un solo contrato Soroban: cobra comisiones (organizador + plataforma), paga al vendedor y reasigna el NFT al comprador.\\
-      Verificador / STAFF & Personal autorizado por el organizador para validar boletos en la puerta del evento. Registrado on-chain (\texttt{Verificador(Address)}) y off-chain (rol \texttt{STAFF} en PostgreSQL).\\
-      Redención on-chain & Marcado irreversible del boleto como usado (\texttt{usado=true}) mediante \texttt{redimir\_boleto}; solo verificadores autorizados pueden invocarla.\\
-      Phase 4 & Fase del proyecto que incorporó el panel de administración, gestión de eventos y roles STAFF, integrando catálogo Web2 y operación on-chain.\\
-      Testnet & Red de pruebas de Stellar sin valor monetario real, utilizada para validar contratos, transacciones y flujos \textit{end-to-end} antes de producción.\\
-      KPI & \textit{Key Performance Indicator}: indicador clave de desempeño (ej: \% de pruebas aprobadas, defectos abiertos, cumplimiento de hitos).\\
-      BPMN & \textit{Business Process Model and Notation}: notación estándar para modelar procesos de negocio.\\
-      Carta Gantt & Diagrama de barras que visualiza actividades del proyecto, duraciones, dependencias y línea temporal.\\
-      Kanban & Método ágil de flujo continuo con tablero visual, WIP limitado y revisiones periódicas; aplicado como marco de trabajo del equipo.\\
-      WIP & \textit{Work In Progress}: límite de trabajo en curso para evitar sobrecarga y mejorar el flujo.\\
-      DoD & \textit{Definition of Done}: criterios que una tarea o historia debe cumplir para considerarse completada.\\
-      E2E & \textit{End-to-End}: flujo completo desde la creación del evento hasta la verificación del boleto en puerta.\\
-      PM & \textit{Project Manager}: rol responsable de coordinación, seguimiento y comunicación con el director.\\
-      \bottomrule
-    \end{longtable}
-
-  % =========================================================
-  % SECCIÓN 4 — Descripción general del plan
-  % =========================================================
-  \section{Descripción general del plan}
-  \label{sec:descripcion-plan}
-    Este plan se estructura en las siguientes secciones principales:
-    \begin{itemize}
-      \item \textbf{Sección~\ref{sec:vista-general} (Vista general del proyecto):} visión del producto entregado, propósito, alcance, objetivos, supuestos y restricciones, entregables y resumen de calendarización y presupuesto.
-      \item \textbf{Sección 8 (Contexto del proyecto):} modelo de ciclo de vida ágil con tablero Kanban, lenguajes y herramientas (Rust/Soroban, Node/Express/Prisma, React/Vite, Supabase, Vercel, Railway, Freighter Wallet), plan de aceptación y estructura organizacional del equipo.
-      \item \textbf{Sección 9 (Administración del proyecto):} métodos y herramientas de estimación; plan de inicio (entrenamiento en Soroban y configuración de infraestructura); planes de trabajo detallados (WBS, carta Gantt ejecutada, asignación de recursos y presupuesto).
-      \item \textbf{Sección 10 (Monitoreo y control):} administración de requerimientos; seguimiento de progreso con métricas y KPIs (cobertura de pruebas, eventos desplegados, defectos abiertos); cierre de fases e iteraciones.
-      \item \textbf{Sección 11 (Entrega del producto):} plan de transición y entrega al director y jurados; responsables y cronograma de artefactos finales.
-      \item \textbf{Sección 12 (Procesos de soporte):} ambiente de trabajo y reglas de equipo; análisis y administración de riesgos materializados; gestión de configuración (Git, migraciones Prisma, despliegues); métricas y proceso de medición; control de calidad (verificación, validación, revisiones).
-    \end{itemize}
-
-  % =========================================================
-  % SECCIÓN 5 — Políticas y convenciones del documento
-  % =========================================================
-  \section{Políticas y convenciones del documento}
-  \label{sec:politicas}
-    \begin{itemize}
-      \item \textbf{Control de cambios y versión:} toda actualización relevante (cambios de alcance, hitos, presupuesto, riesgos críticos, decisiones arquitectónicas) se registra en el \textbf{Historial de Cambios} con: número de versión, fecha, descripción y autor(es) responsable(s).
-      \item \textbf{Estructura y estilos:} el documento utiliza jerarquía de títulos (\texttt{\textbackslash section}, \texttt{\textbackslash subsection}, \texttt{\textbackslash subsubsection}) con numeración automática de \LaTeX. Figuras y tablas incluyen título descriptivo y fuente cuando aplique. Tamaño de letra en figuras/tablas: mínimo 10pt.
-      \item \textbf{Lenguaje y enlaces:} redacción en español con terminología técnica consistente (ver Sección~\ref{sec:glosario}). Hipervínculos internos (azul) para referencias cruzadas entre secciones, tablas y figuras. URLs externas en color azul.
-      \item \textbf{Trazabilidad:} cada plan, métrica o decisión referencia los artefactos relacionados (SRS, SDD, Memoria de TG) y las secciones del SPMP donde se detallan.
-      \item \textbf{Revisiones periódicas:} reunión semanal de seguimiento (ver Sección~\ref{subsec:evolucion-plan}). El equipo sincroniza cambios de alcance, actualizaciones de riesgos y ajustes al plan.
-      \item \textbf{Formato no alterable:} mantener tamaños de letra, márgenes, espaciado y estilos definidos. Permitido: cambio de colores (sin dificultar legibilidad) y marcas de agua institucionales.
-    \end{itemize}
-
-  % =========================================================
-  % SECCIÓN 6 — Vista general del proyecto (completa)
+  % SECCIÓN 6 — Vista general del proyecto
   % =========================================================
   \section{Vista general del proyecto}
   \label{sec:vista-general}
@@ -496,6 +390,45 @@
     \end{itemize}
 
   % =========================================================
+  % SECCIÓN 7 — Glosario
+  % =========================================================
+  \section{Glosario}
+  \label{sec:glosario}
+    \begin{longtable}{@{}p{3.8cm} p{10.7cm}@{}}
+      \toprule
+      \textbf{Término} & \textbf{Definición}\\
+      \midrule
+      \endhead
+      \bottomrule
+      \endfoot
+      Web2.5 & Modelo híbrido que combina la experiencia tradicional Web2 (catálogo, carrito, checkout, cuenta de usuario) con una capa Web3 \textbf{opcional} (NFT, billetera, firma criptográfica). El usuario puede operar sin billetera; la blockchain es una capa de aseguramiento adicional.\\
+      NFT & \textit{Non-Fungible Token}: activo digital único y trazable que representa un boleto en blockchain. Cada NFT tiene un identificador único que impide duplicación o falsificación.\\
+      SEP-41 & \textit{Stellar Ecosystem Proposal 41}: estándar de \textit{token} en Soroban utilizado por el contrato \texttt{ticket\_nft\_contract} para que Freighter clasifique los boletos como \textit{Collectibles}.\\
+      Contrato inteligente & Programa autoejecutable desplegado en \textbf{Soroban} (Stellar) que gobierna la emisión, transferencia, comisiones, reventa y verificación de los boletos tokenizados.\\
+      Stellar & Red blockchain descentralizada diseñada para pagos rápidos y emisión de activos digitales. Utiliza el Protocolo de Consenso Stellar (SCP).\\
+      Soroban & Plataforma de \textit{smart contracts} sobre Stellar basada en WebAssembly (Wasm), que permite programar lógica de negocio en Rust.\\
+      Freighter Wallet & Extensión de navegador (billetera no-custodial) para Stellar. Los usuarios firman transacciones localmente; el backend nunca custodia llaves privadas.\\
+      XDR proxy & Patrón aplicado en el backend: construye \textit{transaction envelopes} (XDR) y los devuelve al frontend para que el usuario firme con su billetera, sin que el servidor tenga acceso a la llave privada.\\
+      Indexer & Proceso en segundo plano (cada 5 s) que consulta el RPC de Soroban, traduce eventos on-chain a actualizaciones en PostgreSQL y mantiene sincronizadas las vistas off-chain.\\
+      Boleto/Ticket & Entrada a un evento. Existe siempre como registro off-chain (PostgreSQL) y opcionalmente como NFT on-chain cuando el usuario decide ``asegurarlo'' en blockchain.\\
+      Burn/Remint & Mecanismo de reventa atómica: el NFT del vendedor se quema (\textit{burn}) y se mintea (\textit{remint}) una nueva versión a nombre del comprador en la misma transacción, evitando estados inconsistentes.\\
+      Reventa atómica P2P & Operación de mercado secundario \textit{peer-to-peer} ejecutada en un solo contrato Soroban: cobra comisiones (organizador + plataforma), paga al vendedor y reasigna el NFT al comprador.\\
+      Verificador / STAFF & Personal autorizado por el organizador para validar boletos en la puerta del evento. Registrado on-chain (\texttt{Verificador(Address)}) y off-chain (rol \texttt{STAFF} en PostgreSQL).\\
+      Redención on-chain & Marcado irreversible del boleto como usado (\texttt{usado=true}) mediante \texttt{redimir\_boleto}; solo verificadores autorizados pueden invocarla.\\
+      Phase 4 & Fase del proyecto que incorporó el panel de administración, gestión de eventos y roles STAFF, integrando catálogo Web2 y operación on-chain.\\
+      Testnet & Red de pruebas de Stellar sin valor monetario real, utilizada para validar contratos, transacciones y flujos \textit{end-to-end} antes de producción.\\
+      KPI & \textit{Key Performance Indicator}: indicador clave de desempeño (ej: \% de pruebas aprobadas, defectos abiertos, cumplimiento de hitos).\\
+      BPMN & \textit{Business Process Model and Notation}: notación estándar para modelar procesos de negocio.\\
+      Carta Gantt & Diagrama de barras que visualiza actividades del proyecto, duraciones, dependencias y línea temporal.\\
+      Kanban & Método ágil de flujo continuo con tablero visual, WIP limitado y revisiones periódicas; aplicado como marco de trabajo del equipo.\\
+      WIP & \textit{Work In Progress}: límite de trabajo en curso para evitar sobrecarga y mejorar el flujo.\\
+      DoD & \textit{Definition of Done}: criterios que una tarea o historia debe cumplir para considerarse completada.\\
+      E2E & \textit{End-to-End}: flujo completo desde la creación del evento hasta la verificación del boleto en puerta.\\
+      PM & \textit{Project Manager}: rol responsable de coordinación, seguimiento y comunicación con el director.\\
+      \bottomrule
+    \end{longtable}
+
+  % =========================================================
   % SECCIÓN 8 — Contexto del proyecto
   % =========================================================
   \section{Contexto del proyecto}
@@ -506,7 +439,16 @@
     \subsection{Modelo de ciclo de vida}
     \label{subsec:ciclo-vida}
 
-      El equipo adoptó un enfoque \textbf{ágil con tablero Kanban} sobre un ciclo de vida \textbf{incremental e iterativo}. La elección responde a tres factores específicos del proyecto:
+      El equipo adoptó un enfoque \textbf{ágil con tablero Kanban} sobre un ciclo de vida \textbf{incremental e iterativo}. La Figura~\ref{fig:bpmn-ciclo-vida} describe el flujo BPMN de una iteración: el \textbf{Equipo de desarrollo} refina el backlog, mueve la tarjeta a \textit{In Progress} respetando el límite de WIP, implementa con pruebas unitarias y abre un \textit{pull request}; el código solo entra a \texttt{main} y se despliega a \textit{testnet} tras un \textit{code review} aprobado. El \textbf{Director TG} valida el avance en la revisión semanal: si la fase cumple la \textit{Definition of Done} se cierra y se consolidan lecciones aprendidas; en caso contrario, los pendientes se re-planifican en la siguiente iteración.
+
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\linewidth]{diagrams/bpmn-ciclo-vida.pdf}
+        \caption{Flujo BPMN del ciclo de vida — iteración Kanban con revisión semanal del director.}
+        \label{fig:bpmn-ciclo-vida}
+      \end{figure}
+
+      La elección responde a tres factores específicos del proyecto:
       \begin{itemize}
         \item \textbf{Dedicación parcial} de los cuatro integrantes (proyecto académico paralelo a otras asignaturas), incompatible con \textit{sprints} de duración fija.
         \item \textbf{Alta incertidumbre técnica} en la integración con Soroban (SDK aún en evolución, comportamientos no documentados de la \textit{testnet}, ajuste de \textit{trustlines} y \textit{salt} en el despliegue), que exigía flujo continuo y respuesta rápida ante bloqueos.
@@ -529,6 +471,39 @@
           \end{itemize}
         \item \textbf{Integración continua manual:} compilación y ejecución de pruebas antes de cada \textit{merge} a \textit{main}; despliegue manual a \textit{testnet} cuando aplicaba.
       \end{itemize}
+
+      \subsubsection{Análisis de Alternativas y Justificación}
+      \label{subsubsec:analisis-ciclo-vida}
+
+      Antes de adoptar el enfoque \textbf{ágil con tablero Kanban}, el equipo evaluó cuatro modelos de ciclo de vida candidatos. La Tabla~\ref{tab:alt-ciclo-vida} resume el análisis comparativo frente a los \textit{drivers} del proyecto: equipo de cinco estudiantes con disponibilidad parcial, requisitos cambiantes derivados de un dominio (Web3) desconocido para el equipo, calendario fijo de 16~semanas con cierre el 24 de mayo de 2026 y necesidad de retroalimentación semanal con el director.
+
+      \begin{longtable}{@{}p{3.0cm} p{4.5cm} p{4.0cm} p{3.0cm}@{}}
+        \caption{Análisis de alternativas de modelo de ciclo de vida}
+        \label{tab:alt-ciclo-vida}\\
+        \toprule
+        \textbf{Modelo} & \textbf{Fortalezas} & \textbf{Debilidades en este proyecto} & \textbf{Veredicto}\\
+        \midrule
+        \endfirsthead
+        \toprule
+        \textbf{Modelo} & \textbf{Fortalezas} & \textbf{Debilidades} & \textbf{Veredicto}\\
+        \midrule
+        \endhead
+        \bottomrule
+        \endfoot
+        Cascada \cite{royce1970} & Trazabilidad fuerte; documentación completa por fase. & Asume requisitos estables; cualquier cambio en SRS obliga a re-trabajo masivo. No tolera el descubrimiento progresivo en Soroban. & Descartado\\
+        RUP \cite{kruchten2003} & Iterativo; vistas arquitectónicas (4+1); hitos de control bien definidos. & Sobrecarga documental excesiva para un equipo de cinco; demasiados roles formales. & Descartado\\
+        Scrum \cite{schwaber2020} & Ritmo iterativo; retrospectivas; \textit{product backlog} priorizado. & \textit{Sprints} de duración fija chocan con horarios académicos heterogéneos del equipo; \textit{Sprint Planning} y \textit{Review} de tamaño fijo no se acomodan a semanas con parciales o receso. & Parcialmente aplicable\\
+        Kanban \cite{anderson2010,brechner2015} & Flujo continuo; WIP limitado; ceremonias ligeras; permite incorporar la revisión semanal con el director como cadencia natural. & Sin \textit{sprints} explícitos, exige mayor disciplina para evitar tareas estancadas. & \textbf{Seleccionado}\\
+      \end{longtable}
+
+      \paragraph{Justificación.} Kanban resultó la mejor alternativa por tres razones, soportadas en la literatura:
+      \begin{enumerate}
+        \item \textbf{Flujo continuo sin \textit{sprints} fijos:} Anderson \cite{anderson2010} y Brechner \cite{brechner2015} muestran que Kanban se acomoda mejor a equipos con disponibilidad heterogénea y a dominios con alta tasa de descubrimiento, como el desarrollo sobre Soroban (tecnología relativamente nueva, documentación en evolución \cite{stellardocs}).
+        \item \textbf{WIP limitado como mecanismo de control:} limitar el trabajo en curso a dos tarjetas por integrante redujo el \textit{cycle time} promedio y evitó el bloqueo por tareas a medio terminar antes de parciales o semana santa.
+        \item \textbf{Compatibilidad con el ciclo incremental:} sobre Kanban se mantuvo un ciclo \textbf{incremental} de cuatro fases (Fundamentos~$\rightarrow$~Reventa~$\rightarrow$~Verificación~$\rightarrow$~Panel admin), cada una validada en \textit{testnet} con el director. Esto preserva los hitos del calendario académico sin imponer la rigidez de los \textit{sprints} de Scrum.
+      \end{enumerate}
+
+      Las prácticas específicas del equipo (revisión por pares, \textit{trunk-based development}, \textit{test-driven mindset} en contratos, T-shirt sizing) se detallan en la Sección~\ref{subsec:herramientas} y son consistentes con las recomendaciones de \cite{anderson2010,beck2002,humble2010}.
 
     \subsection{Métodos, lenguajes y herramientas}
     \label{subsec:herramientas}
@@ -586,6 +561,35 @@
         \item \textbf{Revisión por pares} obligatoria antes de \textit{merge}.
         \item \textbf{Estimación relativa} con \textit{T-shirt sizing} (S/M/L/XL) en lugar de \textit{story points} numéricos, dada la naturaleza académica del proyecto.
       \end{itemize}
+
+      \subsubsection{Análisis de Alternativas y Justificación}
+      \label{subsubsec:analisis-herramientas}
+
+      Las decisiones tecnológicas más críticas (plataforma de \textit{smart contracts}, \textit{framework} frontend, base de datos, modelo de billetera) se tomaron tras evaluar alternativas frente a tres criterios: \emph{compatibilidad con Web2.5}, \emph{costo operativo en testnet/mainnet} y \emph{curva de aprendizaje aceptable para un equipo académico de cinco}. La Tabla~\ref{tab:alt-herramientas} resume el análisis.
+
+      \begin{longtable}{@{}p{2.8cm} p{3.4cm} p{4.2cm} p{4.0cm}@{}}
+        \caption{Análisis de alternativas tecnológicas principales}
+        \label{tab:alt-herramientas}\\
+        \toprule
+        \textbf{Decisión} & \textbf{Alternativas} & \textbf{Argumentos descartados} & \textbf{Elegido}\\
+        \midrule
+        \endfirsthead
+        \toprule
+        \textbf{Decisión} & \textbf{Alternativas} & \textbf{Argumentos descartados} & \textbf{Elegido}\\
+        \midrule
+        \endhead
+        \bottomrule
+        \endfoot
+        Plataforma de \textit{smart contracts} & Ethereum/Solidity \cite{wood2014,solidity}, Solana/Anchor \cite{solanadocs}, Stellar/Soroban \cite{stellardocs,sorobandocs} & Ethereum: \textit{gas fees} altas en \textit{mainnet} y experiencia de usuario costosa para boletería de bajo ticket. Solana: ecosistema Rust maduro pero finalidad y herramientas de billetera menos amigables para Web2.5. & \textbf{Stellar/Soroban}: \textit{fees} bajas, finalidad de 5\,s, billetera Freighter no-custodial, estándar SEP-41 para activos.\\
+        Lenguaje de contratos & Solidity (EVM) \cite{solidity}, Move \cite{movebook}, Rust+Soroban \cite{klabnik2023} & Solidity: trampas conocidas de \textit{reentrancy} y manejo manual de \textit{overflow}. Move: ecosistema pequeño y sin soporte en Stellar. & \textbf{Rust} con \texttt{soroban-sdk}: tipado fuerte, \texttt{cargo test} integrado, errores tipados.\\
+        Frontend & Vue~3 \cite{vuedocs}, Svelte \cite{sveltedocs}, React+Vite \cite{reactdocs,vitedocs} & Vue: experiencia previa del equipo nula. Svelte: comunidad menor y menos integraciones con Stellar SDK. & \textbf{React+Vite}: ecosistema maduro, Stellar SDK JS bien documentado, Vercel deploy nativo.\\
+        Backend & Spring Boot \cite{springdocs}, Django \cite{djangodocs}, Express+Prisma \cite{expressdocs,prismadocs} & Spring/Django: pesados para un proxy XDR \textit{stateless}; añaden tiempos de \textit{build}. & \textbf{Node/Express+Prisma}: comparte TypeScript con el frontend; Prisma da migraciones tipadas.\\
+        Base de datos & MongoDB \cite{mongodocs}, MySQL, PostgreSQL/Supabase \cite{postgresdocs,supabasedocs} & MongoDB: relaciones evento-boleto-usuario son fuertemente relacionales. MySQL: sin plan gratuito con \textit{backups} automáticos cómodo. & \textbf{PostgreSQL gestionado por Supabase}: \textit{backups} diarios, autenticación integrada.\\
+        Modelo de billetera & Custodia centralizada, MetaMask Snaps, Freighter \cite{freighter} & Custodia: obligaría a manejar llaves privadas en el backend (riesgo legal/seguridad). MetaMask Snap: sin soporte estable para Soroban a la fecha del proyecto. & \textbf{Freighter Wallet}: no-custodial, firma local del usuario, integración oficial Stellar.\\
+        \textit{Hosting} & AWS \cite{awsdocs}, Render, Vercel+Railway \cite{verceldocs,railwaydocs} & AWS: complejidad operativa y costos imprevisibles para un proyecto académico. & \textbf{Vercel} (frontend) + \textbf{Railway} (backend+indexer): planes gratuitos suficientes y CI/CD integrado con GitHub.\\
+      \end{longtable}
+
+      \paragraph{Justificación global.} La combinación \textbf{Stellar/Soroban + Rust + Freighter + React + Express/Prisma + Supabase + Vercel/Railway} satisface los tres criterios: (i)~Web2.5 viable porque la billetera es opcional y el indexer mantiene una vista off-chain consultable sin firma; (ii)~costo operativo nulo dentro de los planes gratuitos durante el semestre (los servicios públicos del equipo son el único gasto real); y (iii)~curva de aprendizaje manejable porque cuatro de los siete componentes (React, Express, Prisma, PostgreSQL) ya formaban parte del bagaje previo del equipo, concentrando el esfuerzo de aprendizaje en Rust/Soroban (un único \textit{driver} dominante, mitigado con los recursos formativos oficiales \cite{sorobandocs,klabnik2023}).
 
     \subsection{Plan de aceptación del producto}
     \label{subsec:plan-aceptacion}
@@ -982,6 +986,15 @@
     \subsection{Administración de requerimientos}
     \label{subsec:admin-requerimientos}
 
+      La Figura~\ref{fig:bpmn-req-mgmt} describe el proceso BPMN de cambio de requerimientos. Cualquier integrante actúa como \textbf{Solicitante} y registra un \textit{issue} en GitHub con la plantilla \texttt{req-change}. El \textbf{Project Manager} hace \textit{triage}: si es una clarificación o un defecto, se resuelve \textit{inline} actualizando la matriz de trazabilidad; si impacta el alcance comprometido, el \textbf{Líder técnico} estima esfuerzo y dependencias y el PM lleva la propuesta al \textbf{Director TG} en la revisión semanal. La decisión final (aprobado/rechazado) se documenta y, en caso de aprobación, el PM actualiza SRS, SPMP y matriz de trazabilidad y notifica al equipo por el canal de Discord.
+
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\linewidth]{diagrams/bpmn-req-mgmt.pdf}
+        \caption{Flujo BPMN de administración de requerimientos — detección y control de cambios.}
+        \label{fig:bpmn-req-mgmt}
+      \end{figure}
+
       \subsubsection{Origen y trazabilidad de los requerimientos}
       Los requerimientos del sistema se documentaron formalmente en el \textbf{SRS}. Cada requerimiento tiene un identificador único (\texttt{RF-XX} para funcionales, \texttt{RNF-XX} para no funcionales) que se referencia en:
       \begin{itemize}
@@ -1089,8 +1102,8 @@
         \item \textbf{Semana 15:} densidad de documentación pendiente. \textbf{Acción:} reuniones diarias breves del equipo (15 min) hasta la entrega final para coordinar cierre de SRS, SDD, Memoria y SPMP en paralelo.
       \end{itemize}
 
-    \subsection{Cierre de fases e iteraciones}
-    \label{subsec:cierre-fases}
+    \subsection{Cierre del Proyecto}
+    \label{subsec:cierre-proyecto}
 
       \subsubsection{Criterios de cierre}
       Para considerar una fase incremental como \textbf{cerrada} se debían cumplir simultáneamente los siguientes criterios:
@@ -1129,6 +1142,32 @@
         \item Sustentación pública ante director y jurados en una fecha asignada por la coordinación dentro de la ventana \textbf{25 de mayo -- 5 de junio de 2026}.
         \item Reunión interna de \textit{post-mortem} del equipo: validación de cumplimiento de objetivos, revisión final de métricas, archivo del repositorio y documentación de la versión final v1.5 de este SPMP.
       \end{enumerate}
+
+      \subsubsection{Balance final y cumplimiento de objetivos}
+      Al cierre del semestre 2026-1, \projectname{} se entrega como un \textbf{prototipo Web2.5 funcional desplegado en \textit{testnet}} con los tres contratos Soroban operativos, 12 eventos desplegados, backend con indexer, frontend con Freighter y panel administrativo (Phase 4). El balance final se resume en: 100\% de los objetivos comprometidos (más Phase 4 no contemplada inicialmente), 58/58 pruebas aprobadas, 0 defectos críticos abiertos, 8/9 hitos en fecha y presupuesto ejecutado dentro de lo planificado. La Tabla~\ref{tab:cumplimiento-objetivos} consolida el cumplimiento de los objetivos del proyecto.
+
+      \begin{longtable}{@{}p{8.5cm} p{2.2cm} p{4.0cm}@{}}
+        \caption{Cumplimiento de objetivos del proyecto}
+        \label{tab:cumplimiento-objetivos}\\
+        \toprule
+        \textbf{Objetivo} & \textbf{Estado} & \textbf{Evidencia}\\
+        \midrule
+        \endfirsthead
+        \toprule
+        \textbf{Objetivo} & \textbf{Estado} & \textbf{Evidencia}\\
+        \midrule
+        \endhead
+        \bottomrule
+        \endfoot
+        Diseñar una arquitectura Web2.5 que combine experiencia Web2 tradicional con NFT opcional. & Cumplido & SDD, vistas C4 y demo E2E.\\
+        Implementar tres contratos Soroban (evento, factoría, NFT SEP-41) con pruebas unitarias. & Cumplido & 58/58 pruebas; código en \texttt{main}.\\
+        Construir un backend con patrón XDR proxy \textit{stateless} (sin custodia de llaves). & Cumplido & Backend Express + Prisma; auditoría de no-custodia.\\
+        Construir un frontend integrado con Freighter Wallet y catálogo Web2. & Cumplido & Frontend React/Vite desplegado en Vercel.\\
+        Implementar reventa atómica P2P (\textit{burn/remint}) con comisiones organizador + plataforma. & Cumplido & Flujo E2E ejecutado en \textit{testnet}.\\
+        Implementar verificación \textit{on-chain} en puerta vía rol STAFF/Verificador. & Cumplido & Phase 4; demo de redención.\\
+        Documentar el trabajo de grado conforme a los estándares académicos de la PUJ. & Cumplido & Seis documentos entregados y validados.\\
+        Desplegar al menos 8 eventos de prueba en \textit{testnet}. & Superado & 12/12 eventos desplegados.\\
+      \end{longtable}
 
   % =========================================================
   % SECCIÓN 11 — Entrega del producto
@@ -1284,7 +1323,14 @@
     \label{subsec:riesgos}
 
       \subsubsection{Proceso de gestión de riesgos}
-      La gestión de riesgos siguió un ciclo continuo de cuatro pasos: \textbf{identificación} (en cualquier momento por cualquier integrante o por el director), \textbf{análisis} (estimación de probabilidad e impacto), \textbf{respuesta} (mitigación, transferencia, aceptación o evitación) y \textbf{monitoreo} (revisión semanal del estado de cada riesgo activo).
+      La gestión de riesgos siguió un ciclo continuo de cuatro pasos: \textbf{identificación} (en cualquier momento por cualquier integrante o por el director), \textbf{análisis} (estimación de probabilidad e impacto), \textbf{respuesta} (mitigación, transferencia, aceptación o evitación) y \textbf{monitoreo} (revisión semanal del estado de cada riesgo activo). La Figura~\ref{fig:bpmn-riesgos} formaliza el flujo: el \textbf{Equipo} identifica riesgos nuevos o cambios en cada reunión semanal (\textit{timer start event}); el \textbf{Project Manager} calcula probabilidad × impacto y, si el resultado clasifica el riesgo como crítico (P × I $\geq 12$), define plan de mitigación, responsable y recursos, y monitorea su evolución semanalmente. Los riesgos no críticos quedan en monitoreo pasivo. El registro de riesgos (consolidado en esta sección) se actualiza al final del proceso.
+
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{diagrams/bpmn-riesgos.pdf}
+        \caption{Flujo BPMN de gestión de riesgos — identificación, valoración y monitoreo.}
+        \label{fig:bpmn-riesgos}
+      \end{figure}
 
       La probabilidad y el impacto se evaluaron en una escala cualitativa de tres niveles (Baja / Media / Alta), y la exposición se calculó como el producto categórico de ambos. Se utilizó la matriz de la Tabla~\ref{tab:matriz-riesgo}.
 
@@ -1338,6 +1384,15 @@
 
     \subsection{Administración de configuración y documentación}
     \label{subsec:gestion-configuracion}
+
+      El proceso de control de cambios sobre los elementos de configuración (CI) se formaliza en la Figura~\ref{fig:bpmn-config-mgmt}. El \textbf{Autor} crea una rama \texttt{feature/*}, hace \textit{commit} con mensaje convencional y abre un \textit{pull request} con descripción, pruebas y tipo de cambio. El \textbf{Revisor} ejecuta \textit{code review} y verifica el estado de CI (\textit{build} + pruebas + \textit{lint}). Solo con aprobación y CI verde el cambio entra al \textbf{Repositorio} \texttt{main}, donde recibe un \textit{tag} de versión semántica. Si el cambio afecta artefactos académicos (SPMP, SRS, SDD), el \textbf{Project Manager} actualiza el Historial de Cambios y la versión del documento.
+
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\linewidth]{diagrams/bpmn-config-mgmt.pdf}
+        \caption{Flujo BPMN de control de cambios de configuración (pull request, code review, merge y bitácora).}
+        \label{fig:bpmn-config-mgmt}
+      \end{figure}
 
       \subsubsection{Identificación de elementos de configuración}
       Los \textbf{elementos de configuración (CI)} del proyecto, sometidos a control formal de versiones, son:
@@ -1416,7 +1471,14 @@
     \subsection{Control de calidad}
     \label{subsec:control-calidad}
 
-      El control de calidad se apoya en tres mecanismos complementarios: \textbf{verificación} (¿lo estamos construyendo bien?), \textbf{validación} (¿estamos construyendo lo correcto?) y \textbf{revisiones} (inspección humana).
+      El control de calidad se apoya en tres mecanismos complementarios: \textbf{verificación} (¿lo estamos construyendo bien?), \textbf{validación} (¿estamos construyendo lo correcto?) y \textbf{revisiones} (inspección humana). La Figura~\ref{fig:bpmn-calidad} formaliza el flujo: el \textbf{Desarrollador} arranca tres actividades de verificación en paralelo (\textit{gateway} AND) — \texttt{cargo test}, \texttt{clippy + eslint} y \textit{build}/compilación WASM/TS —; al converger, ejecuta pruebas de integración del backend. Luego, el \textbf{Revisor} hace \textit{code review} y revisión documental; el Desarrollador ejecuta pruebas E2E en \textit{testnet} y el \textbf{Director TG} valida el avance en la revisión semanal. Si la funcionalidad pasa la \textit{Definition of Done} la tarea se marca como DONE y se actualizan métricas; en caso contrario, el defecto se documenta y vuelve al ciclo de integración.
+
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\linewidth]{diagrams/bpmn-calidad.pdf}
+        \caption{Flujo BPMN de control de calidad — verificación paralela, validación y revisiones.}
+        \label{fig:bpmn-calidad}
+      \end{figure}
 
       \subsubsection{Verificación}
       \begin{itemize}
@@ -1464,109 +1526,62 @@
       \end{itemize}
 
   % =========================================================
-  % SECCIÓN — Cierre del proyecto
+  %  Anexos
   % =========================================================
-  \section{Cierre del proyecto}
-  \label{sec:cierre-proyecto}
-
-    Esta sección consolida, de forma retrospectiva, el balance final del trabajo de grado al 24 de mayo de 2026. Recoge el cumplimiento de los compromisos, las lecciones aprendidas transversales, los riesgos residuales y las recomendaciones para una eventual continuación de \projectname.
-
-    \subsection{Balance final del proyecto}
-    \label{subsec:balance-final}
-
-      Al cierre del semestre 2026-1, \projectname{} se entrega como un \textbf{prototipo Web2.5 funcional desplegado en \textit{testnet}} de Stellar, con los tres contratos Soroban operativos (\texttt{event\_contract}, \texttt{factory\_contract}, \texttt{ticket\_nft\_contract}), 12 eventos desplegados y verificables \textit{on-chain}, un backend Node/Express con indexer activo, un frontend React/Vite integrado con Freighter Wallet y un panel de administración (Phase 4) con roles diferenciados (ADMIN, ORGANIZADOR, STAFF, USER).
-
-      \begin{itemize}
-        \item \textbf{Alcance entregado:} 100\% de los objetivos comprometidos en la versión 1.0 del SPMP, más la incorporación de la \textbf{Phase 4} (panel administrativo y rol STAFF), no contemplada inicialmente.
-        \item \textbf{Calidad técnica:} 58/58 pruebas de contratos aprobadas, 0 defectos críticos abiertos al cierre, cobertura del 100\% de funciones públicas de los contratos.
-        \item \textbf{Documentación académica:} seis documentos entregados y validados con el director (Memoria de TG, Plan de Proyecto, SRS, SDD, Propuesta de TG y Formato de Biblioteca).
-        \item \textbf{Cronograma:} 8/9 hitos cumplidos en fecha; el único desplazamiento (Backend + Indexer) se absorbió sin afectar la fecha de cierre.
-        \item \textbf{Presupuesto:} ejecutado dentro del marco operativo planificado (servicios públicos del equipo, sin costos de infraestructura por uso de planes gratuitos de Supabase, Vercel y Railway y de la \textit{testnet} de Stellar).
-      \end{itemize}
-
-    \subsection{Cumplimiento de objetivos}
-    \label{subsec:cumplimiento-objetivos}
-
-      La Tabla~\ref{tab:cumplimiento-objetivos} resume el grado de cumplimiento de los objetivos comprometidos en la Sección~\ref{sec:vista-general}.
-
-      \begin{longtable}{@{}p{8.5cm} p{2.2cm} p{4.0cm}@{}}
-        \caption{Cumplimiento de objetivos del proyecto}
-        \label{tab:cumplimiento-objetivos}\\
-        \toprule
-        \textbf{Objetivo} & \textbf{Estado} & \textbf{Evidencia}\\
-        \midrule
-        \endfirsthead
-        \toprule
-        \textbf{Objetivo} & \textbf{Estado} & \textbf{Evidencia}\\
-        \midrule
-        \endhead
-        \bottomrule
-        \endfoot
-        Diseñar una arquitectura Web2.5 que combine experiencia Web2 tradicional con NFT opcional. & Cumplido & SDD, vistas C4 y demo E2E.\\
-        Implementar tres contratos Soroban (evento, factoría, NFT SEP-41) con pruebas unitarias. & Cumplido & 58/58 pruebas; código en \texttt{main}.\\
-        Construir un backend con patrón XDR proxy \textit{stateless} (sin custodia de llaves). & Cumplido & Backend Express + Prisma; auditoría de no-custodia.\\
-        Construir un frontend integrado con Freighter Wallet y catálogo Web2. & Cumplido & Frontend React/Vite desplegado en Vercel.\\
-        Implementar reventa atómica P2P (\textit{burn/remint}) con comisiones organizador + plataforma. & Cumplido & Flujo E2E ejecutado en \textit{testnet}.\\
-        Implementar verificación \textit{on-chain} en puerta vía rol STAFF/Verificador. & Cumplido & Phase 4; demo de redención.\\
-        Documentar el trabajo de grado conforme a los estándares académicos de la PUJ. & Cumplido & Seis documentos entregados y validados.\\
-        Desplegar al menos 8 eventos de prueba en \textit{testnet}. & Superado & 12/12 eventos desplegados.\\
-      \end{longtable}
-
-    \subsection{Lecciones aprendidas globales}
-    \label{subsec:lecciones-globales}
-
-      Más allá de las lecciones puntuales por fase (Sección~\ref{subsec:cierre-fases}), el equipo identifica las siguientes lecciones \textbf{transversales} al proyecto:
-
-      \begin{itemize}
-        \item \textbf{Web2.5 como propuesta de valor:} permitir al usuario operar sin billetera y luego \textit{opt-in} a la capa on-chain redujo enormemente la fricción de adopción y simplificó las pruebas de usabilidad con personas no técnicas.
-        \item \textbf{Patrón XDR proxy \textit{stateless}:} desacoplar la construcción de transacciones (backend) de la firma (cliente con Freighter) eliminó la necesidad de custodiar llaves y simplificó la superficie de auditoría.
-        \item \textbf{Indexer como puente:} mantener un indexer sincronizando estado on-chain $\rightarrow$ PostgreSQL fue clave para servir vistas rápidas al frontend sin sacrificar la fuente de verdad criptográfica.
-        \item \textbf{Kanban con WIP limitado} resultó más adecuado que sprints fijos para un equipo de cinco con horarios académicos heterogéneos.
-        \item \textbf{Revisiones semanales con el director:} actuaron como mecanismo de control de alcance y validación temprana; el desplazamiento de un solo hito se atribuye en parte a este ritmo de retroalimentación.
-        \item \textbf{Documentación viva:} actualizar el SPMP, el SRS y el SDD al final de cada fase (no solo al inicio) evitó la divergencia entre documento entregado y sistema construido.
-        \item \textbf{Curva de aprendizaje de Soroban/Rust:} subestimada inicialmente; en proyectos futuros conviene reservar un \textit{spike} técnico explícito antes de comprometer fechas de entrega.
-      \end{itemize}
-
-    \subsection{Riesgos residuales y trabajo futuro}
-    \label{subsec:riesgos-residuales}
-
-      El prototipo entregado funciona en \textit{testnet} y cumple los criterios de aceptación académicos. Para una eventual evolución hacia un producto operativo se identifican los siguientes \textbf{riesgos residuales} y \textbf{líneas de trabajo futuro}:
-
-      \begin{itemize}
-        \item \textbf{Migración a \textit{mainnet}:} requiere auditoría externa de los tres contratos Soroban, plan de manejo de incidentes y procedimientos de actualización (\textit{upgradeability}) antes de mover valor real.
-        \item \textbf{Pasarela de pagos real:} el \textit{checkout} fiat es simulado; integrar una pasarela (Stripe, PayU u otra) implica cumplimiento PCI-DSS y rediseño del flujo de conciliación con on-chain.
-        \item \textbf{Escalabilidad del indexer:} el indexer actual opera con \textit{polling} cada 5 s sobre el RPC de Soroban; para volúmenes mayores conviene migrar a un esquema basado en \textit{webhooks} o a un servicio gestionado.
-        \item \textbf{Experiencia de usuario sin billetera:} aunque la capa Web3 es opcional, una eventual versión de producción debe ofrecer custodia opcional (billetera gestionada) para usuarios que prefieran no instalar Freighter.
-        \item \textbf{Internacionalización y accesibilidad (WCAG):} ambos quedaron fuera de alcance del prototipo académico y deben abordarse antes de un lanzamiento público.
-        \item \textbf{Modelo de negocio sostenible:} definir la estructura de comisiones (organizador / plataforma / reventa) en función de los costos operativos reales de \textit{mainnet} y de pasarela de pagos.
-      \end{itemize}
-
-    \subsection{Cierre formal del SPMP}
-    \label{subsec:cierre-formal-spmp}
-
-      Con la entrega de la versión \textbf{1.5} de este Plan de Gestión del Proyecto (21 de mayo de 2026) y de los demás artefactos académicos asociados, el equipo declara \textbf{cerrado} el ciclo de gestión del trabajo de grado \projectname{} correspondiente al semestre 2026-1.
-
-      \begin{itemize}
-        \item \textbf{Estado del repositorio:} congelado en la rama \texttt{main}; \textit{tag} de cierre \texttt{v1.0-tg-cierre} aplicado el 24 de mayo de 2026.
-        \item \textbf{Estado de la infraestructura:} servicios desplegados (Vercel, Railway, Supabase, contratos en \textit{testnet}) se mantienen activos para la sustentación; su desmantelamiento posterior queda a discreción del equipo y del director.
-        \item \textbf{Custodia documental:} los seis documentos del trabajo de grado se entregan a la biblioteca de la Pontificia Universidad Javeriana conforme al Formato de Biblioteca.
-        \item \textbf{Responsabilidad post-cierre:} el equipo no compromete soporte ni mantenimiento posterior a la sustentación; cualquier evolución posterior se considera fuera del alcance del trabajo de grado.
-      \end{itemize}
-
-      Este Plan deja registro trazable y medible del proceso ejecutado, en concordancia con IEEE Std 1058-1998 y con las directrices del curso de \textit{Planeación Proyecto Final} de la Pontificia Universidad Javeriana.
+  \section*{Anexos}
+  \addcontentsline{toc}{section}{Anexos}
+  \label{sec:anexos}
+    Este documento es \textbf{autocontenido}: toda la información operativa, métricas, cronograma, riesgos y procesos necesarios para entender la gestión del proyecto se encuentra dentro de las secciones~6 a~12. Los siguientes elementos complementarios se mantienen como artefactos vivos en el repositorio del trabajo de grado:
+    \begin{itemize}
+      \item \textbf{Tablero Kanban} (GitHub Projects): historial de tarjetas, \textit{lead time} y \textit{cycle time} por tarjeta. Repositorio: \url{https://github.com/Tesis-Stellar}.
+      \item \textbf{Hoja de horas-persona} (Google Drive): registro semanal por integrante, base de la métrica de desviación de esfuerzo (Sección~\ref{subsec:monitoreo-progreso}).
+      \item \textbf{Bitácora de revisiones semanales con el director}: actas breves de cada reunión (15--16 actas).
+      \item \textbf{Salida de pruebas} (\texttt{cargo test}, \texttt{npm test}): logs completos de las 58 pruebas de contratos y las pruebas E2E del backend/frontend.
+      \item \textbf{Reportes de despliegue en \textit{testnet}}: hashes de transacción y direcciones de los 12 contratos de evento desplegados.
+    \end{itemize}
+    Estos artefactos no se incluyen en línea para mantener la legibilidad del documento, y son consultables bajo solicitud al equipo o al director del trabajo de grado.
 
   % =========================================================
   %  Referencias
   % =========================================================
-  \section{Referencias}
+  \section*{Referencias}
+  \addcontentsline{toc}{section}{Referencias}
   \label{sec:referencias}
-    \begin{enumerate}[leftmargin=*,label={[\arabic*]}]
-      \item IEEE Std 1058-1998: \textit{IEEE Standard for Software Project Management Plans}.
-      \item ISO/IEC/IEEE 12207:2017: \textit{Systems and software engineering — Software life cycle processes}.
-      \item Project Management Institute (PMI): \textit{A Guide to the Project Management Body of Knowledge (PMBOK® Guide)}, 7th Edition, 2021.
-      \item Guía y plantilla del curso para SPMP, Pontificia Universidad Javeriana, 2025.
-      \item Stellar Development Foundation: \textit{Stellar Documentation}, \url{https://developers.stellar.org/}.
-      \item Soroban Documentation: \textit{Smart Contracts on Stellar}, \url{https://soroban.stellar.org/}.
-    \end{enumerate}
+    \begin{thebibliography}{99}
+      \bibitem{ieee1058} IEEE Std 1058-1998, \textit{IEEE Standard for Software Project Management Plans}, 1998.
+      \bibitem{iso16326} ISO/IEC/IEEE 16326:2009, \textit{Systems and software engineering — Life cycle processes — Project management}, 2009.
+      \bibitem{iso12207} ISO/IEC/IEEE 12207:2017, \textit{Systems and software engineering — Software life cycle processes}, 2017.
+      \bibitem{pmbok2021} Project Management Institute, \textit{A Guide to the Project Management Body of Knowledge (PMBOK Guide)}, 7th ed., 2021.
+      \bibitem{puj2025} Pontificia Universidad Javeriana, \textit{Guía y plantilla del curso para SPMP}, 2025.
+      \bibitem{royce1970} W. W. Royce, ``Managing the development of large software systems,'' in \textit{Proc. IEEE WESCON}, 1970, pp. 1--9.
+      \bibitem{kruchten2003} P. Kruchten, \textit{The Rational Unified Process: An Introduction}, 3rd ed., Addison-Wesley, 2003.
+      \bibitem{schwaber2020} K. Schwaber and J. Sutherland, \textit{The Scrum Guide}, 2020. \url{https://scrumguides.org/}.
+      \bibitem{anderson2010} D. J. Anderson, \textit{Kanban: Successful Evolutionary Change for Your Technology Business}, Blue Hole Press, 2010.
+      \bibitem{brechner2015} E. Brechner, \textit{Agile Project Management with Kanban}, Microsoft Press, 2015.
+      \bibitem{beck2002} K. Beck, \textit{Test-Driven Development: By Example}, Addison-Wesley, 2002.
+      \bibitem{humble2010} J. Humble and D. Farley, \textit{Continuous Delivery}, Addison-Wesley, 2010.
+      \bibitem{stellardocs} Stellar Development Foundation, \textit{Stellar Documentation}, \url{https://developers.stellar.org/}.
+      \bibitem{sorobandocs} Stellar Development Foundation, \textit{Soroban Smart Contracts Documentation}, \url{https://soroban.stellar.org/}.
+      \bibitem{wood2014} G. Wood, ``Ethereum: A secure decentralised generalised transaction ledger,'' \textit{Ethereum Yellow Paper}, 2014.
+      \bibitem{solidity} Ethereum Foundation, \textit{Solidity Documentation}, \url{https://docs.soliditylang.org/}.
+      \bibitem{solanadocs} Solana Foundation, \textit{Solana Documentation}, \url{https://docs.solana.com/}.
+      \bibitem{movebook} S. Blackshear et al., \textit{Move: A Language With Programmable Resources}, Diem, 2019.
+      \bibitem{klabnik2023} S. Klabnik and C. Nichols, \textit{The Rust Programming Language}, 2nd ed., No Starch Press, 2023.
+      \bibitem{reactdocs} Meta, \textit{React Documentation}, \url{https://react.dev/}.
+      \bibitem{vitedocs} E. You, \textit{Vite Documentation}, \url{https://vitejs.dev/}.
+      \bibitem{vuedocs} E. You, \textit{Vue.js Documentation}, \url{https://vuejs.org/}.
+      \bibitem{sveltedocs} R. Harris, \textit{Svelte Documentation}, \url{https://svelte.dev/}.
+      \bibitem{expressdocs} OpenJS Foundation, \textit{Express Documentation}, \url{https://expressjs.com/}.
+      \bibitem{prismadocs} Prisma, \textit{Prisma ORM Documentation}, \url{https://www.prisma.io/docs}.
+      \bibitem{springdocs} VMware, \textit{Spring Boot Documentation}, \url{https://spring.io/projects/spring-boot}.
+      \bibitem{djangodocs} Django Software Foundation, \textit{Django Documentation}, \url{https://docs.djangoproject.com/}.
+      \bibitem{postgresdocs} PostgreSQL Global Development Group, \textit{PostgreSQL Documentation}, \url{https://www.postgresql.org/docs/}.
+      \bibitem{supabasedocs} Supabase, \textit{Supabase Documentation}, \url{https://supabase.com/docs}.
+      \bibitem{mongodocs} MongoDB, \textit{MongoDB Documentation}, \url{https://www.mongodb.com/docs/}.
+      \bibitem{freighter} Stellar Development Foundation, \textit{Freighter Wallet}, \url{https://www.freighter.app/}.
+      \bibitem{awsdocs} Amazon Web Services, \textit{AWS Documentation}, \url{https://docs.aws.amazon.com/}.
+      \bibitem{verceldocs} Vercel, \textit{Vercel Documentation}, \url{https://vercel.com/docs}.
+      \bibitem{railwaydocs} Railway, \textit{Railway Documentation}, \url{https://docs.railway.app/}.
+    \end{thebibliography}
 
 \end{document}
