@@ -48,6 +48,7 @@ A continuación se definen los términos técnicos utilizados a lo largo del doc
 \item[Stellar] Red pública descentralizada orientada a la transferencia de valor digital y a la emisión de activos tokenizados.
 \item[Soroban] Plataforma de contratos inteligentes de Stellar, integrada desde el protocolo 20. Los contratos se escriben en Rust y se compilan al formato WebAssembly.
 \item[SCP (Stellar Consensus Protocol)] Instancia del paradigma \textit{Federated Byzantine Agreement}. Cada nodo declara su propia configuración de confianza (\textit{quorum slices}) en lugar de depender de una membresía fija.
+\item[PoA (Proof of Agreement) ] Mecanismo de consenso implementado por el Protocolo de Consenso de Stellar (SCP). A diferencia de la Prueba de Trabajo (\textit{Proof of Work}) o la Prueba de Participación (\textit{Proof of Stake}), la Prueba de Acuerdo permite lograr el consenso a través de una serie rápida de mensajes entre los participantes para confirmar transacciones, sin requerir soluciones de fuerza bruta matemática ni un alto consumo de energía [1, 2].
 \item[FBA (\textit{Federated Byzantine Agreement})] Modelo de consenso bizantino en el que la membresía y los quórums se definen de forma descentralizada por cada nodo.
 \item[Quórum / \textit{Quorum slice}] Subconjunto de nodos cuya colaboración basta para que un nodo acepte un valor como acordado. Un quórum contiene al menos un slice de cada uno de sus miembros.
 \item[Horizon] Interfaz HTTP que expone las operaciones clásicas de Stellar (pagos, líneas de confianza, manejo de activos).
